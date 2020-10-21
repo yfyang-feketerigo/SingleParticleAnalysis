@@ -143,6 +143,7 @@
     <ClInclude Include="input.h" />
     <ClInclude Include="particle.h" />
     <ClInclude Include="single_particle_analysis.h" />
+    <ClInclude Include="statistics.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="configuration.cpp" />
@@ -150,8 +151,11 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="particle.cpp" />
     <ClCompile Include="single_particle_analysis.cpp" />
+    <ClCompile Include="statistics.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="data.restart.shear.wi.0.1.24000000" />
+    <None Include="data.restart.shear.wi.10.240000" />
     <None Include="data.restart.shear.wi.10.29280" />
     <None Include="data.T0.42.Equi" />
     <None Include="data.T0.42.preEqui" />

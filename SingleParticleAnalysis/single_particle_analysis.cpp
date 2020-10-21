@@ -50,7 +50,7 @@ void Configuration_ParticleDynamic::compute_msd(Configuration config_t0)
 	return;
 }
 
-void Configuration_ParticleDynamic::compute_msd_nonAffine(Configuration config_t0, Configuration_ParticleDynamic::ShearDirection shear_direction)
+void Configuration_ParticleDynamic::compute_msd_nonAffine(Configuration config_t0, Configuration_ParticleDynamic::ShearDirection shear_direction, double shear_rate, double step_time)
 {
 	msd_nonAffine.resize(get_particle().size() + 1, 0);
 	double lx = get_xhi() - get_xlo();
@@ -60,6 +60,8 @@ void Configuration_ParticleDynamic::compute_msd_nonAffine(Configuration config_t
 	double lx_t0 = config_t0.get_xhi() - config_t0.get_xlo();
 	double ly_t0 = config_t0.get_yhi() - config_t0.get_yhi();
 	double lz_t0 = config_t0.get_zhi() - config_t0.get_zhi();
+
+	double dt = (get_timestep() - config_t0.get_timestep()) * step_time;
 
 	for (size_t i = 0; i < get_particle().size(); i++)
 	{
@@ -72,13 +74,13 @@ void Configuration_ParticleDynamic::compute_msd_nonAffine(Configuration config_t
 		switch (shear_direction)
 		{
 		case Configuration_ParticleDynamic::ShearDirection::xy:
-			drx += (get_xy() - config_t0.get_xy()) / ly * lx;
+			drx -= p_pa_t0->ry * shear_rate * dt;
 			break;
 		case Configuration_ParticleDynamic::ShearDirection::xz:
-			drx += (get_xz() - config_t0.get_xz()) / lz * lx;
+			drx -= p_pa_t0->rz * shear_rate * dt;
 			break;
 		case Configuration_ParticleDynamic::ShearDirection::yz:
-			dry += (get_yz() - config_t0.get_yz()) / lz * ly;
+			dry -= p_pa_t0->rz * shear_rate * dt;
 			break;
 		default:
 			break;
@@ -88,6 +90,39 @@ void Configuration_ParticleDynamic::compute_msd_nonAffine(Configuration config_t
 		msd_nonAffine[p_pa->id] = _msd_nonAfine;
 	}
 	return;
+}
+
+vector<Particle> Configuration_ParticleDynamic::pick_cross_gradient_boundary_particle(Configuration config_t0, ShearDirection shear_direction)
+{
+	for (size_t i = 0; i < get_particle().size(); i++)
+	{
+		const Particle* p_pa = &get_particle()[i];
+		const Particle* p_pa_t0 = &config_t0.get_particle(p_pa->id);
+		switch (shear_direction)
+		{
+		case Configuration_ParticleDynamic::ShearDirection::xy:
+			if (p_pa->box_y != p_pa_t0->box_y)
+			{
+				cross_gradient_boundary_particle.push_back(*p_pa);
+			}
+			break;
+		case Configuration_ParticleDynamic::ShearDirection::xz:
+			if (p_pa->box_z != p_pa_t0->box_z)
+			{
+				cross_gradient_boundary_particle.push_back(*p_pa);
+			}
+			break;
+		case Configuration_ParticleDynamic::ShearDirection::yz:
+			if (p_pa->box_z != p_pa_t0->box_z)
+			{
+				cross_gradient_boundary_particle.push_back(*p_pa);
+			}
+			break;
+		default:
+			break;
+		}
+	}
+	return cross_gradient_boundary_particle;
 }
 
 

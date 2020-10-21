@@ -27,6 +27,9 @@
     <ClInclude Include="single_particle_analysis.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="statistics.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="configuration.cpp">
@@ -44,6 +47,9 @@
     <ClCompile Include="single_particle_analysis.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="statistics.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="data.restart.shear.wi.10.29280">
@@ -53,6 +59,12 @@
       <Filter>资源文件</Filter>
     </None>
     <None Include="data.T0.42.preEqui">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="data.restart.shear.wi.10.240000">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="data.restart.shear.wi.0.1.24000000">
       <Filter>资源文件</Filter>
     </None>
   </ItemGroup>

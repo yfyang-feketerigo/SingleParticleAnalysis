@@ -41,6 +41,7 @@ class Configuration_ParticleDynamic :public Configuration
 private:
 	std::vector<double> msd;
 	std::vector<double> msd_nonAffine;
+	std::vector<Particle> cross_gradient_boundary_particle;
 public:
 	Configuration_ParticleDynamic(std::string config_fname)
 		:Configuration(config_fname) { };
@@ -62,11 +63,13 @@ public:
 		yz
 	};
 
-	void compute_msd_nonAffine(Configuration config_t0, Configuration_ParticleDynamic::ShearDirection shear_direction);
+
+	void compute_msd_nonAffine(Configuration config_t0, Configuration_ParticleDynamic::ShearDirection shear_direction, double shear_rate, double dt = 0.0025);
 
 	inline std::vector<double> get_msd_nonAffine()
 	{
 		return msd_nonAffine;
 	};
 
+	vector<Particle> pick_cross_gradient_boundary_particle(Configuration config_t0, ShearDirection shear_direction);
 };

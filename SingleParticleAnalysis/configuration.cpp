@@ -112,7 +112,7 @@ Configuration::Configuration(std::string config_file, BoxType _boxtype, PairStyl
 	clog << firstline << endl;;
 	clog << "Configuration data file " << config_file << " has " << particle_num << " particles" << endl;
 	clog << "Configuration has " << type_num << " particle type(s)" << endl;
-
+	clog << "Time Step: " << timestep << endl;;
 	for (size_t i = 0; i < strvec_mass_info.size(); i++)
 	{
 		clog << strvec_mass_info[i] << endl;

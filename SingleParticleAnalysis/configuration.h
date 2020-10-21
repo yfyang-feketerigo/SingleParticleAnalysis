@@ -64,7 +64,7 @@ public:
 	inline void SET_HEAD_INFO_LINE(size_t _HEAD_INFO_LINE) { HEAD_INFO_LINE = _HEAD_INFO_LINE; }
 	inline static void SET_GAP_LINE(size_t _GAP_LINE) { GAP_LINE = _GAP_LINE; }
 
-
+	inline void set_time_step(unsigned long long _timestep) { timestep = _timestep; };
 
 	inline void set_particle_num(size_t _num) { particle_num = _num; } //set total number of particles
 	inline size_t get_particle_num() const { return particle_num; }	   //return total number of particles
