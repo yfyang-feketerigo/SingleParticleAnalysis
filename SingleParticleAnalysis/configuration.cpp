@@ -154,16 +154,13 @@ Configuration::Configuration(std::string config_file, BoxType _boxtype, PairStyl
 	in_data.skip_line(GAP_LINE);
 	clog << "Coordinates have been read!" << endl;
 	clog << "Reading velocities..." << endl;
-	Particle* p_particle = nullptr;
 	for (size_t i = 0; i < particle_num; i++)
 	{
 		in_data.read_line_data();
-		p_particle = seek_id(vec_particle, (size_t)in_data.get_data()[0]);
-		(*p_particle).vx = in_data.get_data()[1];
-		(*p_particle).vy = in_data.get_data()[2];
-		(*p_particle).vz = in_data.get_data()[3];
+		Particle& p_particle = seek_id(vec_particle, (size_t)in_data.get_data()[0]);
+		p_particle.vy = in_data.get_data()[2];
+		p_particle.vz = in_data.get_data()[3];
 	}
-	p_particle = nullptr;
 	clog << "Velocities have been read!" << endl;
 	clog << "Configuration data file " << config_file << " has been read!" << endl;
 	clog << endl;

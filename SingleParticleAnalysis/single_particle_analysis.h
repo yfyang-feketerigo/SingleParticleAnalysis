@@ -5,12 +5,18 @@
 #include <string>
 #include <iostream>
 #include <vector>
+#include <cmath>
 /*using std::string;
 using std::cout;
 using std::cerr;
 using std::vector;
 */
 
+struct CN
+{
+	size_t particle_id;
+	double CN;
+};
 class Configuration_StaticStructure :public Configuration
 {
 	/*
@@ -20,7 +26,7 @@ class Configuration_StaticStructure :public Configuration
 	*/
 private:
 	//double z;
-	std::vector<unsigned int> coordination_number;
+	std::vector<CN> coordination_number;
 	//double
 public:
 	Configuration_StaticStructure(std::string config_fname)
@@ -30,17 +36,29 @@ public:
 		:Configuration(config_fname, _boxtype, _pairstyle) { };
 
 	void compute_CN(double r_cut);
-	inline std::vector<unsigned int> get_CN()
+	inline std::vector<CN> get_CN()
 	{
 		return coordination_number;
 	}
 };
 
+struct MSD
+{
+	size_t particle_id;
+	double MSD_x;
+	double MSD_y;
+	double MSD_z;
+	double MSD;
+};
+
 class Configuration_ParticleDynamic :public Configuration
 {
+	/*
+	计算单粒子动态参量
+	*/
 private:
-	std::vector<double> msd;
-	std::vector<double> msd_nonAffine;
+	std::vector<MSD> msd;
+	std::vector<MSD> msd_nonAffine;
 	std::vector<Particle> cross_gradient_boundary_particle;
 public:
 	Configuration_ParticleDynamic(std::string config_fname)
@@ -51,7 +69,7 @@ public:
 
 	void compute_msd(Configuration config_t0);
 
-	inline std::vector<double> get_msd()
+	inline std::vector<MSD> get_msd()
 	{
 		return msd;
 	};
@@ -66,7 +84,7 @@ public:
 
 	void compute_msd_nonAffine(Configuration config_t0, Configuration_ParticleDynamic::ShearDirection shear_direction, double shear_rate, double dt = 0.0025);
 
-	inline std::vector<double> get_msd_nonAffine()
+	inline std::vector<MSD> get_msd_nonAffine()
 	{
 		return msd_nonAffine;
 	};

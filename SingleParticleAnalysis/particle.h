@@ -26,4 +26,4 @@ struct Particle
 	double vz = 0;		//velocity in z direction
 };
 
-Particle* seek_id(vector<Particle>& vec_p, size_t _id); //return the particle of given id;
+Particle& seek_id(vector<Particle>& vec_p, size_t _id); //return the particle of given id;
