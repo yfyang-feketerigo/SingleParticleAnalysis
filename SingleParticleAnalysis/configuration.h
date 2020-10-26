@@ -7,6 +7,7 @@
 #include <string>
 #include <array>
 #include <vector>
+#include <initializer_list>
 //#include <algorithm>
 
 using std::ofstream;
@@ -130,5 +131,9 @@ public:
 	{
 		return vec_particle;
 	}
+
+
+	void to_data(string fname, BoxType _boxtype = BoxType::tilt);
+	void to_dump(string fname, std::initializer_list<string> add_para_name, std::initializer_list<vector<double>> add_para, vector<string> comments = {});//注意额外参量与粒子序号的对应关系
 };
 

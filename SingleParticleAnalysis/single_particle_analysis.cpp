@@ -32,6 +32,51 @@ void Configuration_StaticStructure::compute_CN(double r_cut)
 	return;
 }
 
+const CN& Configuration_StaticStructure::get_CN(size_t _id) const
+{
+	for (size_t i = 0; i < coordination_number.size(); i++)
+	{
+		if (coordination_number[i].particle_id == _id)
+		{
+			return coordination_number[i];
+		}
+	}
+	cerr << "particle " << _id << " CN not found!" << endl;
+	throw ("particle " + std::to_string(_id) + " CN not found!");
+}
+
+void Configuration_StaticStructure::CN_to_file(std::string fname)
+{
+	vector<double> _vec_CN(get_particle_num());
+	bool flag_same_seq = true;
+
+	for (size_t i = 0; i < get_particle().size(); i++)
+	{
+		if (get_particle()[i].id == coordination_number[i].particle_id)
+		{
+			flag_same_seq = flag_same_seq && true;
+			_vec_CN[i] = coordination_number[i].CN;
+
+		}
+		else
+		{
+			flag_same_seq = flag_same_seq && false;
+			_vec_CN[i] = get_CN(get_particle()[i].id).CN;
+		}
+
+	}
+	if (flag_same_seq)
+	{
+		to_dump(fname, { "CN" }, { _vec_CN });
+	}
+	else
+	{
+		string warning = "#WARNING: seq of vec_CN and vec_particle not match";
+		std::clog << warning << endl;
+		to_dump(fname, { "CN" }, { _vec_CN }, { warning });
+	}
+	return;
+}
 void Configuration_ParticleDynamic::compute_msd(Configuration config_t0)
 {
 
@@ -59,6 +104,20 @@ void Configuration_ParticleDynamic::compute_msd(Configuration config_t0)
 		msd[i].MSD = _msd;
 	}
 	return;
+}
+
+const MSD& Configuration_ParticleDynamic::get_msd(size_t _id)
+{
+
+	for (size_t i = 0; i < msd.size(); i++)
+	{
+		if (msd[i].particle_id == _id)
+		{
+			return msd[i];
+		}
+	}
+	cerr << "particle " << _id << " msd not found!" << endl;
+	throw ("particle " + std::to_string(_id) + " msd not found!");
 }
 
 void Configuration_ParticleDynamic::compute_msd_nonAffine(Configuration config_t0, Configuration_ParticleDynamic::ShearDirection shear_direction, double shear_rate, double step_time)
@@ -108,6 +167,19 @@ void Configuration_ParticleDynamic::compute_msd_nonAffine(Configuration config_t
 	return;
 }
 
+const MSD& Configuration_ParticleDynamic::get_msd_nonAffine(size_t _id)
+{
+	for (size_t i = 0; i < msd.size(); i++)
+	{
+		if (msd_nonAffine[i].particle_id == _id)
+		{
+			return msd_nonAffine[i];
+		}
+	}
+	cerr << "particle " << _id << " msd not found!" << endl;
+	throw ("particle " + std::to_string(_id) + " msd not found!");
+}
+
 vector<Particle> Configuration_ParticleDynamic::pick_cross_gradient_boundary_particle(Configuration config_t0, ShearDirection shear_direction)
 {
 	for (size_t i = 0; i < get_particle().size(); i++)
@@ -139,6 +211,74 @@ vector<Particle> Configuration_ParticleDynamic::pick_cross_gradient_boundary_par
 		}
 	}
 	return cross_gradient_boundary_particle;
+}
+
+
+void Configuration_ParticleDynamic::msd_to_file(std::string fname)
+{
+	vector<double> _vec_msd(get_particle_num());
+	//vector<double> _vec_msd_nonAffine(get_particle_num());
+	bool flag_same_seq = true;
+
+	for (size_t i = 0; i < get_particle().size(); i++)
+	{
+		if (get_particle()[i].id == msd[i].particle_id)
+		{
+			flag_same_seq = flag_same_seq && true;
+			_vec_msd[i] = msd[i].MSD;
+
+		}
+		else
+		{
+			flag_same_seq = flag_same_seq && false;
+			_vec_msd[i] = get_msd(get_particle()[i].id).MSD;
+		}
+
+	}
+	if (flag_same_seq)
+	{
+		to_dump(fname, { "msd" }, { _vec_msd });
+	}
+	else
+	{
+		string warning = "#WARNING: seq of vec_msd and vec_particle not match";
+		std::clog << warning << endl;
+		to_dump(fname, { "msd" }, { _vec_msd }, { warning });
+	}
+	return;
+}
+
+void Configuration_ParticleDynamic::nonAffineMSD_to_file(std::string fname)
+{
+	vector<double> _vec_msd_nonAffine(get_particle_num());
+	bool flag_same_seq = true;
+
+	for (size_t i = 0; i < get_particle().size(); i++)
+	{
+		if (get_particle()[i].id == msd[i].particle_id)
+		{
+			flag_same_seq = flag_same_seq && true;
+			_vec_msd_nonAffine[i] = msd_nonAffine[i].MSD;
+
+		}
+		else
+		{
+			flag_same_seq = flag_same_seq && false;
+			_vec_msd_nonAffine[i] = get_msd_nonAffine(get_particle()[i].id).MSD;
+		}
+
+	}
+	if (flag_same_seq)
+	{
+		to_dump(fname, { "msd_nonAffine" }, { _vec_msd_nonAffine });
+	}
+	else
+	{
+		string warning = "#WARNING: seq of vec_msd_nonAffine and vec_particle not match";
+		std::clog << warning << endl;
+		to_dump(fname, { "msd_nonAffine" }, { _vec_msd_nonAffine }, { warning });
+	}
+	return;
 }
 
 

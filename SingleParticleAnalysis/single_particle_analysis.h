@@ -36,10 +36,13 @@ public:
 		:Configuration(config_fname, _boxtype, _pairstyle) { };
 
 	void compute_CN(double r_cut);
-	inline std::vector<CN> get_CN()
+	inline const std::vector<CN>& get_CN()
 	{
 		return coordination_number;
 	}
+	const CN& get_CN(size_t _id) const;
+	void CN_to_file(std::string fname);
+
 };
 
 struct MSD
@@ -69,10 +72,11 @@ public:
 
 	void compute_msd(Configuration config_t0);
 
-	inline std::vector<MSD> get_msd()
+	inline const std::vector<MSD>& get_msd()
 	{
 		return msd;
 	};
+	const MSD& get_msd(size_t _id);
 
 	enum class ShearDirection
 	{
@@ -84,10 +88,14 @@ public:
 
 	void compute_msd_nonAffine(Configuration config_t0, Configuration_ParticleDynamic::ShearDirection shear_direction, double shear_rate, double dt = 0.0025);
 
-	inline std::vector<MSD> get_msd_nonAffine()
+	inline const std::vector<MSD>& get_msd_nonAffine()
 	{
 		return msd_nonAffine;
 	};
-
+	const MSD& get_msd_nonAffine(size_t _id);
 	vector<Particle> pick_cross_gradient_boundary_particle(Configuration config_t0, ShearDirection shear_direction);
+
+
+	void msd_to_file(std::string fname);
+	void nonAffineMSD_to_file(std::string fname);
 };

@@ -166,3 +166,94 @@ Configuration::Configuration(std::string config_file, BoxType _boxtype, PairStyl
 	clog << endl;
 	infile.close();
 }
+
+void Configuration::to_data(string fname, BoxType _boxtype)
+{
+	ofstream ofile;
+	ofile.open(fname);
+	if (!ofile.is_open())
+	{
+		cerr << fname << " open failed" << endl;
+		throw (fname + " open failed");
+	}
+	ofile << "LAMMPS data file via C++, Configuration class, timestep = " << timestep << endl;
+	ofile << endl;
+	ofile << particle_num << " atoms" << endl;
+	ofile << type_num << " atom types" << endl;
+	ofile << endl;
+
+	ofile << xlo << " " << xhi << " " << "xlo " << "xhi" << endl;
+	ofile << ylo << " " << yhi << " " << "ylo " << "yhi" << endl;
+	ofile << zlo << " " << zhi << " " << "zlo " << "zhi" << endl;
+	if (_boxtype == BoxType::tilt)
+	{
+		ofile << xy << " " << xz << " " << yz << " " << "xy " << "xz " << "yz";
+	}
+	for (size_t i = 0; i < strvec_mass_info.size(); i++)
+	{
+		ofile << strvec_mass_info[i] << endl;
+	}
+	for (size_t i = 0; i < strvec_pair_info.size(); i++)
+	{
+		ofile << strvec_pair_info[i] << endl;
+	}
+	ofile << str_atoms_info << endl;
+	ofile << endl;
+	for (size_t i = 0; i < vec_particle.size(); i++)
+	{
+		Particle& pa = vec_particle[i];
+		ofile << pa.id << " " << pa.type << " " << pa.rx << " " << pa.ry << " " << pa.rz << " "
+			<< pa.box_x << " " << pa.box_y << " " << pa.box_z << endl;
+	}
+	ofile << endl;
+	ofile << "Velocities" << endl;
+	ofile << endl;
+	for (size_t i = 0; i < vec_particle.size(); i++)
+	{
+		Particle& pa = vec_particle[i];
+		ofile << pa.id << " " << pa.vx << " " << pa.vy << " " << pa.vz << endl;
+	}
+	ofile.close();
+	return;
+}
+
+void Configuration::to_dump(string fname, std::initializer_list<string> add_para_name, std::initializer_list<vector<double>> add_para, vector<string> comments)
+{
+	ofstream ofile;
+	ofile.open(fname);
+	if (!ofile.is_open())
+	{
+		cerr << fname << " open failed" << endl;
+		throw (fname + " open failed");
+	}
+	for (size_t i = 0; i < comments.size(); i++)
+	{
+		ofile << comments[i] << endl;
+	}
+	ofile << "ITEM: TIMESTEP" << endl;
+	ofile << timestep << endl;
+	ofile << "ITEM: NUMBER OF ATOMS" << endl;
+	ofile << particle_num << endl;
+	ofile << "ITEM: BOX BOUNDS xy xz yz pp pp pp " << endl;
+	ofile << xlo << " " << xhi << " " << xy << endl;
+	ofile << ylo << " " << yhi << " " << xz << endl;
+	ofile << zlo << " " << zhi << " " << yz << endl;
+	ofile << "ITEM: id x y z";
+	for (auto it_li = add_para_name.begin(); it_li < add_para_name.end(); it_li++)
+	{
+		ofile << *it_li << " ";
+	}
+	ofile << endl;
+	for (size_t i = 0; i < vec_particle.size(); i++)
+	{
+		Particle& pa = vec_particle[i];
+		ofile << pa.id << " " << pa.rx << " " << pa.ry << " " << pa.rz << " ";
+		for (auto it_li = add_para.begin(); it_li < add_para.end(); it_li++)
+		{
+			ofile << (*it_li)[i] << " ";
+		}
+		ofile << endl;
+	}
+	ofile.close();
+	return;
+}
