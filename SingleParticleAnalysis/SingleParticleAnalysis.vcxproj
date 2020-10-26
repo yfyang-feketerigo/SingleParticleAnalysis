@@ -157,6 +157,7 @@
     <None Include="data.restart.shear.wi.0.1.24000000" />
     <None Include="data.restart.shear.wi.10.240000" />
     <None Include="data.restart.shear.wi.10.29280" />
+    <None Include="data.T0.38.Equi" />
     <None Include="data.T0.42.Equi" />
     <None Include="data.T0.42.preEqui" />
   </ItemGroup>

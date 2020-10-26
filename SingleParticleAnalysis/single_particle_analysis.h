@@ -34,7 +34,8 @@ public:
 
 	Configuration_StaticStructure(std::string config_fname, BoxType _boxtype = BoxType::orthogonal, PairStyle _pairstyle = PairStyle::single)
 		:Configuration(config_fname, _boxtype, _pairstyle) { };
-
+	Configuration_StaticStructure()
+		:Configuration() {};
 	void compute_CN(double r_cut);
 	inline const std::vector<CN>& get_CN()
 	{
@@ -54,7 +55,7 @@ struct MSD
 	double MSD;
 };
 
-class Configuration_ParticleDynamic :public Configuration
+class Configuration_ParticleDynamic :public Configuration_StaticStructure
 {
 	/*
 	计算单粒子动态参量
@@ -64,11 +65,16 @@ private:
 	std::vector<MSD> msd_nonAffine;
 	std::vector<Particle> cross_gradient_boundary_particle;
 public:
-	Configuration_ParticleDynamic(std::string config_fname)
+	/*Configuration_ParticleDynamic(std::string config_fname)
 		:Configuration(config_fname) { };
-
+		*/
+		//Configuration_PrticleDynamic() {};
+	Configuration_ParticleDynamic()
+		:Configuration_StaticStructure() {};
 	Configuration_ParticleDynamic(std::string config_fname, BoxType _boxtype = BoxType::orthogonal, PairStyle _pairstyle = PairStyle::single)
-		:Configuration(config_fname, _boxtype, _pairstyle) { };
+		:Configuration_StaticStructure(config_fname, _boxtype, _pairstyle) { };
+
+	Configuration_ParticleDynamic gen_sub_config(const Configuration_ParticleDynamic& config_parents, vector<size_t> vec_id);
 
 	void compute_msd(Configuration config_t0);
 

@@ -67,5 +67,8 @@
     <None Include="data.restart.shear.wi.0.1.24000000">
       <Filter>资源文件</Filter>
     </None>
+    <None Include="data.T0.38.Equi">
+      <Filter>资源文件</Filter>
+    </None>
   </ItemGroup>
 </Project>

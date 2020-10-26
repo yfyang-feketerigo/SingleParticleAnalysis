@@ -19,7 +19,7 @@ class Configuration
 private:
 	static const size_t LINE_SKIP_MAX = 2147483647;
 
-	size_t HEAD_INFO_LINE; //data file description information, e.g. mass, pair etc.
+	size_t HEAD_INFO_LINE = 0; //data file description information, e.g. mass, pair etc.
 	static size_t GAP_LINE;		 //description line between position and velocity
 
 	size_t particle_num = 0; //total particle number
@@ -57,7 +57,7 @@ public:
 		pair
 	};
 	Configuration(string config_file, BoxType _boxtype = BoxType::orthogonal, PairStyle _pairstyle = PairStyle::single);				   //
-
+	Configuration() {};
 	inline size_t GET_LINE_MAX() { return LINE_SKIP_MAX; }
 	inline size_t GET_HEAD_INFO_LINE() { return HEAD_INFO_LINE; }
 	inline static size_t GET_GAP_LINE() { return GAP_LINE; }
@@ -132,7 +132,12 @@ public:
 		return vec_particle;
 	}
 
-
+	size_t __add_particle(const Particle& new_pa);
+	inline void __clear_vec_particle()
+	{
+		vec_particle.clear();
+		particle_num = 0;
+	}
 	void to_data(string fname, BoxType _boxtype = BoxType::tilt);
 	void to_dump(string fname, std::initializer_list<string> add_para_name, std::initializer_list<vector<double>> add_para, vector<string> comments = {});//注意额外参量与粒子序号的对应关系
 };

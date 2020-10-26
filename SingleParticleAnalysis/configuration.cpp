@@ -167,6 +167,30 @@ Configuration::Configuration(std::string config_file, BoxType _boxtype, PairStyl
 	infile.close();
 }
 
+size_t Configuration::__add_particle(const Particle& new_pa)
+{
+	bool flag_inbox = new_pa.rx >= xlo && new_pa.rx <= xhi
+		&& new_pa.ry >= ylo && new_pa.ry <= yhi
+		&& new_pa.rz >= zlo && new_pa.rz <= zhi;
+	if (!flag_inbox)
+	{
+		cerr << "new particle coordiantion is not in box!" << endl;
+		throw "new particle coordiantion is not in box!";
+	}
+	bool flag_oldtype = true;
+	for (size_t i = 0; i < vec_particle.size(); i++)
+	{
+		flag_oldtype = flag_oldtype && (new_pa.type == vec_particle[i].type);
+	}
+	if (!flag_oldtype)
+	{
+		cerr << "WARNING: NEW particle type add, make sure pair&mass info be modified" << endl;
+	}
+	particle_num++;
+	vec_particle.push_back(new_pa);
+	return vec_particle.size();
+}
+
 void Configuration::to_data(string fname, BoxType _boxtype)
 {
 	ofstream ofile;
@@ -238,7 +262,7 @@ void Configuration::to_dump(string fname, std::initializer_list<string> add_para
 	ofile << xlo << " " << xhi << " " << xy << endl;
 	ofile << ylo << " " << yhi << " " << xz << endl;
 	ofile << zlo << " " << zhi << " " << yz << endl;
-	ofile << "ITEM: id x y z";
+	ofile << "ITEM: ATOMS id type x y z ix iy iz ";
 	for (auto it_li = add_para_name.begin(); it_li < add_para_name.end(); it_li++)
 	{
 		ofile << *it_li << " ";
@@ -247,7 +271,8 @@ void Configuration::to_dump(string fname, std::initializer_list<string> add_para
 	for (size_t i = 0; i < vec_particle.size(); i++)
 	{
 		Particle& pa = vec_particle[i];
-		ofile << pa.id << " " << pa.rx << " " << pa.ry << " " << pa.rz << " ";
+		ofile << pa.id << " " << pa.type << " " << pa.rx << " " << pa.ry << " " << pa.rz << " ";
+		ofile << pa.box_x << " " << pa.box_y << " " << pa.box_z << " ";
 		for (auto it_li = add_para.begin(); it_li < add_para.end(); it_li++)
 		{
 			ofile << (*it_li)[i] << " ";

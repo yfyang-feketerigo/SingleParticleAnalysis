@@ -6,28 +6,30 @@ void Configuration_StaticStructure::compute_CN(double r_cut)
 	double lx = get_xhi() - get_xlo();
 	double ly = get_yhi() - get_ylo();
 	double lz = get_zhi() - get_zlo();
-	for (size_t i = 0; i < get_particle().size() - 1; i++)
+	for (size_t i = 0; i < get_particle().size(); i++)
 	{
 		//const std::unique_ptr<Particle> p_pa_i(&get_particle()[i]);
 		const Particle& p_pa_i = get_particle()[i];
 		coordination_number[i].particle_id = p_pa_i.id;
-		for (size_t j = i + 1; j < get_particle().size(); j++)
+		for (size_t j = 0; j < get_particle().size(); j++)
 		{
 			const Particle& p_pa_j = get_particle()[j];
-			coordination_number[j].particle_id = p_pa_j.id;
 			double dx = p_pa_i.rx - p_pa_j.rx;
-			dx = dx - std::floor(dx / lx * 2) * lx / 2;
+			dx = (dx - std::floor(dx / lx * 2) * lx / 2);
 			double dy = p_pa_i.ry - p_pa_j.ry;
-			dy = dy - std::floor(dy / ly * 2) * ly / 2;
+			dy = (dy - std::floor(dy / ly * 2) * ly / 2);
 			double dz = p_pa_i.rz - p_pa_j.rz;
-			dz = dz - std::floor(dz / lz * 2) * lz / 2;
+			dz = (dz - std::floor(dz / lz * 2) * lz / 2);
 			double dr = sqrt(dx * dx + dy * dy + dz * dz);
 			if (dr < r_cut)
 			{
 				coordination_number[i].CN++;
-				coordination_number[j].CN++;
 			}
 		}
+	}
+	for (size_t i = 0; i < coordination_number.size(); i++)
+	{
+		coordination_number[i].CN -= 1;
 	}
 	return;
 }
@@ -77,6 +79,20 @@ void Configuration_StaticStructure::CN_to_file(std::string fname)
 	}
 	return;
 }
+
+Configuration_ParticleDynamic Configuration_ParticleDynamic::gen_sub_config(const Configuration_ParticleDynamic& config_parents, vector<size_t> vec_id)
+{
+	Configuration_ParticleDynamic sub_config;
+	sub_config = config_parents;
+	sub_config.__clear_vec_particle();
+	vector<Particle> vec_pa = config_parents.get_particle();
+	for (size_t i = 0; i < vec_id.size(); i++)
+	{
+		sub_config.__add_particle(seek_id(vec_pa, vec_id[i]));
+	}
+	return sub_config;
+}
+
 void Configuration_ParticleDynamic::compute_msd(Configuration config_t0)
 {
 
@@ -250,12 +266,12 @@ void Configuration_ParticleDynamic::msd_to_file(std::string fname)
 
 void Configuration_ParticleDynamic::nonAffineMSD_to_file(std::string fname)
 {
-	vector<double> _vec_msd_nonAffine(get_particle_num());
+	vector<double> _vec_msd_nonAffine(msd_nonAffine.size());
 	bool flag_same_seq = true;
 
 	for (size_t i = 0; i < get_particle().size(); i++)
 	{
-		if (get_particle()[i].id == msd[i].particle_id)
+		if (get_particle()[i].id == msd_nonAffine[i].particle_id)
 		{
 			flag_same_seq = flag_same_seq && true;
 			_vec_msd_nonAffine[i] = msd_nonAffine[i].MSD;
@@ -266,7 +282,6 @@ void Configuration_ParticleDynamic::nonAffineMSD_to_file(std::string fname)
 			flag_same_seq = flag_same_seq && false;
 			_vec_msd_nonAffine[i] = get_msd_nonAffine(get_particle()[i].id).MSD;
 		}
-
 	}
 	if (flag_same_seq)
 	{
@@ -280,5 +295,6 @@ void Configuration_ParticleDynamic::nonAffineMSD_to_file(std::string fname)
 	}
 	return;
 }
+
 
 
