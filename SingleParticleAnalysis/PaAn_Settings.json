@@ -1,0 +1,14 @@
+{
+  "_comment": "目录末尾记得加 '/'",
+  "wi": 10,
+  "tau_alpha": 12000,
+  "data_fpath": "./",
+  "fname_prefix": "data.restart.shear.wi.10.",
+  "fname_postfix": null,
+  "end_step": 240000,
+  "delta_step": 240000,
+  "equi_data_fpath": "./",
+  "equi_config_fname": "data.T0.42.Equi",
+  "output_path": "./test/",
+  "CN_rcut": 1.0
+}

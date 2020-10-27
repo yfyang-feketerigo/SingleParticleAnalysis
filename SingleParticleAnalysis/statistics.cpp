@@ -8,10 +8,12 @@ Statistics::Statistics(std::vector<double> _data)
 		return;
 	}
 	data = _data;
-	std::sort(_data.begin(), _data.end());
-	minimum = _data.front();
-	maxim = _data.back();
 
+	auto minmax = std::minmax_element(data.begin(), data.end());
+	minimum = *(minmax.first);
+	maxim = *(minmax.second);
+
+	std::sort(_data.begin(), _data.end());
 	if (_data.size() % 2 == 0)
 	{
 		double size = _data.size();

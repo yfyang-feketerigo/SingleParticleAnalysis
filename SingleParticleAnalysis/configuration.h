@@ -8,6 +8,7 @@
 #include <array>
 #include <vector>
 #include <initializer_list>
+#include <algorithm>
 //#include <algorithm>
 
 using std::ofstream;
@@ -18,10 +19,9 @@ class Configuration
 {
 private:
 	static const size_t LINE_SKIP_MAX = 2147483647;
+	static const size_t GAP_LINE = 3;		 //description line between position and velocity
 
 	size_t HEAD_INFO_LINE = 0; //data file description information, e.g. mass, pair etc.
-	static size_t GAP_LINE;		 //description line between position and velocity
-
 	size_t particle_num = 0; //total particle number
 	unsigned long long timestep = 0;
 
@@ -63,7 +63,7 @@ public:
 	inline static size_t GET_GAP_LINE() { return GAP_LINE; }
 
 	inline void SET_HEAD_INFO_LINE(size_t _HEAD_INFO_LINE) { HEAD_INFO_LINE = _HEAD_INFO_LINE; }
-	inline static void SET_GAP_LINE(size_t _GAP_LINE) { GAP_LINE = _GAP_LINE; }
+	//inline static void SET_GAP_LINE(size_t _GAP_LINE) { GAP_LINE = _GAP_LINE; }
 
 	inline void set_time_step(unsigned long long _timestep) { timestep = _timestep; };
 

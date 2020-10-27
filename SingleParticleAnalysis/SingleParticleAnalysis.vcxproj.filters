@@ -70,5 +70,20 @@
     <None Include="data.T0.38.Equi">
       <Filter>资源文件</Filter>
     </None>
+    <None Include="data.restart.shear.wi.10.480">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="data.restart.shear.wi.0.1.48000">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="data.restart.shear.wi.10.120000">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="data.restart.shear.wi.10.202080">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="PaAn_Settings.json">
+      <Filter>资源文件</Filter>
+    </None>
   </ItemGroup>
 </Project>

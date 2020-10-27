@@ -11,6 +11,7 @@ class Statistics :统计类，用于统计一维数据，可计算：
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <algorithm>	
 struct Distribution
 {
 	double min = 0; //数据中的最小值
