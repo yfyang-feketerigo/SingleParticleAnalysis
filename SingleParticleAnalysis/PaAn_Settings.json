@@ -1,0 +1,16 @@
+{
+  "wi": 1,
+  "tau_alpha": 12000,
+  "data_fpath": "./",
+  "fname_prefix": "test",
+  "fname_postfix": "test",
+  "end_step": 100,
+  "delta_step": "1000",
+  "equi_data_fpath": "./",
+  "equi_config_fname": "test",
+  "output_path": "./test",
+  "computeCN": true,
+  "CN_rcut": 1.4,
+  "computeMSD": true,
+  "computeMSDnonAffine": true
+}
