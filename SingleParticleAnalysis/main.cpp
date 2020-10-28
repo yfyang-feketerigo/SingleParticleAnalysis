@@ -5,14 +5,15 @@
 #include <string>
 #include <fstream>
 #include <json/json.h>
-#include <boost/timer.hpp>
+//#include <boost/timer.hpp>
+#include <boost/timer/timer.hpp>
 #include <boost/filesystem.hpp>
 
 int main()
 {
 	try
 	{
-		boost::timer timer;
+		boost::timer::auto_cpu_timer timer;
 		Json::Value root;
 
 		std::clog << "Reading PaAn_Settings.json..." << endl;
@@ -94,7 +95,7 @@ int main()
 
 		}
 		cout << "##################################" << endl;
-		cout << "PROGRAM END, TOTAL TIME USED: " << timer.elapsed() << "s" << endl;
+		//cout << "PROGRAM END, TOTAL TIME USED: " << timer.elapsed() << "s" << endl;
 		return 0;
 	}
 	catch (const string e)

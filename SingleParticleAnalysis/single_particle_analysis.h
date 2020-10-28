@@ -74,7 +74,7 @@ public:
 	Configuration_ParticleDynamic(std::string config_fname, BoxType _boxtype = BoxType::orthogonal, PairStyle _pairstyle = PairStyle::single)
 		:Configuration_StaticStructure(config_fname, _boxtype, _pairstyle) { };
 
-	Configuration_ParticleDynamic gen_sub_config(const Configuration_ParticleDynamic& config_parents, vector<size_t> vec_id);
+
 
 	void compute_msd(Configuration config_t0);
 
@@ -104,4 +104,6 @@ public:
 
 	void msd_to_file(std::string fname);
 	void nonAffineMSD_to_file(std::string fname);
+
+	Configuration_ParticleDynamic gen_sub_config(const Configuration_ParticleDynamic& config_parents, vector<size_t> vec_id);
 };

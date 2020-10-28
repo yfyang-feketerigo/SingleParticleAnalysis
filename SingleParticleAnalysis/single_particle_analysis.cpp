@@ -80,18 +80,6 @@ void Configuration_StaticStructure::CN_to_file(std::string fname)
 	return;
 }
 
-Configuration_ParticleDynamic Configuration_ParticleDynamic::gen_sub_config(const Configuration_ParticleDynamic& config_parents, vector<size_t> vec_id)
-{
-	Configuration_ParticleDynamic sub_config;
-	sub_config = config_parents;
-	sub_config.__clear_vec_particle();
-	vector<Particle> vec_pa = config_parents.get_particle();
-	for (size_t i = 0; i < vec_id.size(); i++)
-	{
-		sub_config.__add_particle(seek_id(vec_pa, vec_id[i]));
-	}
-	return sub_config;
-}
 
 void Configuration_ParticleDynamic::compute_msd(Configuration config_t0)
 {
@@ -294,6 +282,20 @@ void Configuration_ParticleDynamic::nonAffineMSD_to_file(std::string fname)
 		to_dump(fname, { "msd_nonAffine" }, { _vec_msd_nonAffine }, { warning });
 	}
 	return;
+}
+
+Configuration_ParticleDynamic Configuration_ParticleDynamic::gen_sub_config(const Configuration_ParticleDynamic& config_parents, vector<size_t> vec_id)
+{
+	Configuration_ParticleDynamic sub_config;
+	sub_config = config_parents;
+	sub_config.__clear_vec_particle();
+	vector<Particle> vec_pa = config_parents.get_particle();
+	for (size_t i = 0; i < vec_id.size(); i++)
+	{
+		sub_config.__add_particle(seek_id(vec_pa, vec_id[i]));
+	}
+	sub_config.set_particle_num(sub_config.get_particle().size());
+	return sub_config;
 }
 
 
