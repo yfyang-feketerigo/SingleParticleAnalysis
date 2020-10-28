@@ -101,8 +101,8 @@ void Configuration_ParticleDynamic::compute_msd(Configuration config_t0)
 	double lz = get_zhi() - get_zlo();
 
 	double lx_t0 = config_t0.get_xhi() - config_t0.get_xlo();
-	double ly_t0 = config_t0.get_yhi() - config_t0.get_yhi();
-	double lz_t0 = config_t0.get_zhi() - config_t0.get_zhi();
+	double ly_t0 = config_t0.get_yhi() - config_t0.get_ylo();
+	double lz_t0 = config_t0.get_zhi() - config_t0.get_zlo();
 
 	msd.resize(get_particle().size());
 	for (size_t i = 0; i < get_particle().size(); i++)
@@ -144,8 +144,8 @@ void Configuration_ParticleDynamic::compute_msd_nonAffine(Configuration config_t
 	double lz = get_zhi() - get_zlo();
 
 	double lx_t0 = config_t0.get_xhi() - config_t0.get_xlo();
-	double ly_t0 = config_t0.get_yhi() - config_t0.get_yhi();
-	double lz_t0 = config_t0.get_zhi() - config_t0.get_zhi();
+	double ly_t0 = config_t0.get_yhi() - config_t0.get_ylo();
+	double lz_t0 = config_t0.get_zhi() - config_t0.get_zlo();
 
 	double dt = (get_timestep() - config_t0.get_timestep()) * step_time;
 
@@ -161,13 +161,13 @@ void Configuration_ParticleDynamic::compute_msd_nonAffine(Configuration config_t
 		switch (shear_direction)
 		{
 		case Configuration_ParticleDynamic::ShearDirection::xy:
-			drx -= p_pa_t0.ry * shear_rate * dt;
+			drx -= p_pa.ry * shear_rate * dt;
 			break;
 		case Configuration_ParticleDynamic::ShearDirection::xz:
-			drx -= p_pa_t0.rz * shear_rate * dt;
+			drx -= p_pa.rz * shear_rate * dt;
 			break;
 		case Configuration_ParticleDynamic::ShearDirection::yz:
-			dry -= p_pa_t0.rz * shear_rate * dt;
+			dry -= p_pa.rz * shear_rate * dt;
 			break;
 		default:
 			break;

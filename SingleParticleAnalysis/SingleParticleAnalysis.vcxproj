@@ -72,15 +72,27 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>D:\optional_libs\jsoncpp-master\include;D:\optional_libs\boost_1_74_0;$(IncludePath)</IncludePath>
+    <LibraryPath>D:\optional_libs\boost_1_74_0\stage\lib;$(LibraryPath)</LibraryPath>
+    <ReferencePath>$(ReferencePath)</ReferencePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
+    <IncludePath>D:\optional_libs\jsoncpp-master\include;D:\optional_libs\boost_1_74_0;$(IncludePath)</IncludePath>
+    <LibraryPath>D:\optional_libs\boost_1_74_0\stage\lib;$(LibraryPath)</LibraryPath>
+    <ReferencePath>$(ReferencePath)</ReferencePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>D:\optional_libs\jsoncpp-master\include;D:\optional_libs\boost_1_74_0;$(IncludePath)</IncludePath>
+    <LibraryPath>D:\optional_libs\boost_1_74_0\stage\lib;$(LibraryPath)</LibraryPath>
+    <ReferencePath>$(ReferencePath)</ReferencePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
+    <IncludePath>D:\optional_libs\jsoncpp-master\include;D:\optional_libs\boost_1_74_0;$(IncludePath)</IncludePath>
+    <LibraryPath>D:\optional_libs\boost_1_74_0\stage\lib;$(LibraryPath)</LibraryPath>
+    <ReferencePath>$(ReferencePath)</ReferencePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -92,6 +104,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>D:\optional_libs\boost_1_74_0\bin.v2\libs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -108,6 +121,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>D:\optional_libs\boost_1_74_0\bin.v2\libs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -120,6 +134,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>D:\optional_libs\boost_1_74_0\bin.v2\libs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -136,6 +151,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>D:\optional_libs\boost_1_74_0\bin.v2\libs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -155,11 +171,16 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="data.restart.shear.wi.0.1.24000000" />
+    <None Include="data.restart.shear.wi.0.1.48000" />
+    <None Include="data.restart.shear.wi.10.120000" />
+    <None Include="data.restart.shear.wi.10.202080" />
     <None Include="data.restart.shear.wi.10.240000" />
     <None Include="data.restart.shear.wi.10.29280" />
+    <None Include="data.restart.shear.wi.10.480" />
     <None Include="data.T0.38.Equi" />
     <None Include="data.T0.42.Equi" />
     <None Include="data.T0.42.preEqui" />
+    <None Include="PaAn_Settings.json" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,6 +1,5 @@
 #include "configuration.h"
 
-size_t Configuration::GAP_LINE = 3;
 Configuration::Configuration(std::string config_file, BoxType _boxtype, PairStyle _pairstyle)
 {
 	clog << "#LAMMPS data file reader..." << endl;
@@ -259,8 +258,16 @@ void Configuration::to_dump(string fname, std::initializer_list<string> add_para
 	ofile << "ITEM: NUMBER OF ATOMS" << endl;
 	ofile << particle_num << endl;
 	ofile << "ITEM: BOX BOUNDS xy xz yz pp pp pp " << endl;
-	ofile << xlo << " " << xhi << " " << xy << endl;
-	ofile << ylo << " " << yhi << " " << xz << endl;
+	auto xvi = { 0.,xy,xz,xy + xz };
+	auto x_minmax = std::minmax_element(xvi.begin(), xvi.end());
+	double visual_xlo = xlo + *x_minmax.first;
+	double visual_xhi = xhi + *x_minmax.second;
+	auto yvi = { 0.,yz };
+	auto y_minmax = std::minmax_element(yvi.begin(), yvi.end());
+	double visual_ylo = ylo + *y_minmax.first;
+	double visual_yhi = yhi + *y_minmax.second;
+	ofile << visual_xlo << " " << visual_xhi << " " << xy << endl;
+	ofile << visual_ylo << " " << visual_yhi << " " << xz << endl;
 	ofile << zlo << " " << zhi << " " << yz << endl;
 	ofile << "ITEM: ATOMS id type x y z ix iy iz ";
 	for (auto it_li = add_para_name.begin(); it_li < add_para_name.end(); it_li++)
