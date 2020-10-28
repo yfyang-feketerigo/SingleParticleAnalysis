@@ -1,5 +1,5 @@
 {
-  "_comment": "Ŀ¼ĩβ�ǵü� '/'",
+  "_comment": "路径名记得添加 '/'",
   "wi": 10,
   "tau_alpha": 12000,
   "data_fpath": "./",
@@ -10,5 +10,8 @@
   "equi_data_fpath": "./",
   "equi_config_fname": "data.T0.42.Equi",
   "output_path": "./test/",
-  "CN_rcut": 1.0
+  "CN_rcut": 1.0,
+  "computeCN": true,
+  "computeMSD": true,
+  "computeMSDnonAffine": true
 }
