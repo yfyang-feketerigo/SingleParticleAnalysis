@@ -27,9 +27,6 @@
     <ClInclude Include="single_particle_analysis.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="statistics.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="configuration.cpp">
@@ -45,9 +42,6 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="single_particle_analysis.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="statistics.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

@@ -94,7 +94,7 @@ int main()
 			}
 
 		}
-		cout << "##################################" << endl;
+		cout << "####################################################################" << endl;
 		//cout << "PROGRAM END, TOTAL TIME USED: " << timer.elapsed() << "s" << endl;
 		return 0;
 	}
