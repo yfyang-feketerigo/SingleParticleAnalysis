@@ -3,17 +3,20 @@
 void Configuration_StaticStructure::compute_CN(double r_cut)
 {
 	coordination_number.resize(get_particle().size());
+	//盒子边界
 	double lx = get_xhi() - get_xlo();
 	double ly = get_yhi() - get_ylo();
 	double lz = get_zhi() - get_zlo();
 	for (size_t i = 0; i < get_particle().size(); i++)
 	{
-		//const std::unique_ptr<Particle> p_pa_i(&get_particle()[i]);
 		const Particle& p_pa_i = get_particle()[i];
 		coordination_number[i].particle_id = p_pa_i.id;
 		for (size_t j = 0; j < get_particle().size(); j++)
 		{
 			const Particle& p_pa_j = get_particle()[j];
+			/*
+			处理周期性坐标
+			*/
 			double dx = p_pa_i.rx - p_pa_j.rx;
 			dx = (dx - std::floor(dx / lx * 2) * lx / 2);
 			double dy = p_pa_i.ry - p_pa_j.ry;
@@ -81,17 +84,17 @@ void Configuration_StaticStructure::CN_to_file(std::string fname)
 }
 
 
-void Configuration_ParticleDynamic::compute_msd(Configuration config_t0)
+void Configuration_ParticleDynamic::compute_msd(const Configuration& config_t0)
 {
-
+	//t时刻盒子边长
 	double lx = get_xhi() - get_xlo();
 	double ly = get_yhi() - get_ylo();
 	double lz = get_zhi() - get_zlo();
-
+	//0时刻盒子边长
 	double lx_t0 = config_t0.get_xhi() - config_t0.get_xlo();
 	double ly_t0 = config_t0.get_yhi() - config_t0.get_ylo();
 	double lz_t0 = config_t0.get_zhi() - config_t0.get_zlo();
-
+	//剪切情况下 l_t0 = l
 	msd.resize(get_particle().size());
 	for (size_t i = 0; i < get_particle().size(); i++)
 	{
@@ -124,7 +127,7 @@ const MSD& Configuration_ParticleDynamic::get_msd(size_t _id)
 	throw ("particle " + std::to_string(_id) + " msd not found!");
 }
 
-void Configuration_ParticleDynamic::compute_msd_nonAffine(Configuration config_t0, Configuration_ParticleDynamic::ShearDirection shear_direction, double shear_rate, double step_time)
+void Configuration_ParticleDynamic::compute_shear_MSDnonAffine(const Configuration& config_t0, Configuration_ParticleDynamic::ShearDirection shear_direction, double shear_rate, double step_time)
 {
 
 	double lx = get_xhi() - get_xlo();
@@ -171,7 +174,7 @@ void Configuration_ParticleDynamic::compute_msd_nonAffine(Configuration config_t
 	return;
 }
 
-const MSD& Configuration_ParticleDynamic::get_msd_nonAffine(size_t _id)
+const MSD& Configuration_ParticleDynamic::get_MSDnonAffine(size_t _id)
 {
 	for (size_t i = 0; i < msd.size(); i++)
 	{
@@ -184,7 +187,7 @@ const MSD& Configuration_ParticleDynamic::get_msd_nonAffine(size_t _id)
 	throw ("particle " + std::to_string(_id) + " msd not found!");
 }
 
-vector<Particle> Configuration_ParticleDynamic::pick_cross_gradient_boundary_particle(Configuration config_t0, ShearDirection shear_direction)
+vector<Particle> Configuration_ParticleDynamic::pick_cross_gradient_boundary_particle(const Configuration& config_t0, ShearDirection shear_direction)
 {
 	for (size_t i = 0; i < get_particle().size(); i++)
 	{
@@ -218,7 +221,7 @@ vector<Particle> Configuration_ParticleDynamic::pick_cross_gradient_boundary_par
 }
 
 
-void Configuration_ParticleDynamic::msd_to_file(std::string fname)
+void Configuration_ParticleDynamic::to_file_MSD(std::string fname)
 {
 	vector<double> _vec_msd(get_particle_num());
 	//vector<double> _vec_msd_nonAffine(get_particle_num());
@@ -252,7 +255,7 @@ void Configuration_ParticleDynamic::msd_to_file(std::string fname)
 	return;
 }
 
-void Configuration_ParticleDynamic::nonAffineMSD_to_file(std::string fname)
+void Configuration_ParticleDynamic::to_file_nonAffineMSD(std::string fname)
 {
 	vector<double> _vec_msd_nonAffine(msd_nonAffine.size());
 	bool flag_same_seq = true;
@@ -268,7 +271,7 @@ void Configuration_ParticleDynamic::nonAffineMSD_to_file(std::string fname)
 		else
 		{
 			flag_same_seq = flag_same_seq && false;
-			_vec_msd_nonAffine[i] = get_msd_nonAffine(get_particle()[i].id).MSD;
+			_vec_msd_nonAffine[i] = get_MSDnonAffine(get_particle()[i].id).MSD;
 		}
 	}
 	if (flag_same_seq)

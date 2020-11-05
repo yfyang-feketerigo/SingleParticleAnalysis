@@ -52,10 +52,6 @@ int main()
 			throw ("data file path: " + boost_path_check.string() + " not exits");
 		}
 
-
-		bool flag_CN = root["computeCN"].asBool();
-		bool flag_MSD = root["computeMSD"].asBool();
-		bool flag_MSDnonAffine = root["computeMSDnonAffine"].asBool();
 		void mkdir(std::string path);
 		mkdir(output_path);
 		string CNdir = output_path + "CN/";
@@ -68,8 +64,17 @@ int main()
 		Configuration_StaticStructure config_equi
 		(equi_data_fpath + equi_fname, Configuration::BoxType::orthogonal, Configuration::PairStyle::single);
 		config_equi.set_time_step(0);
-		config_equi.compute_CN(CN_rcut);
-		config_equi.CN_to_file(CNdir + "CN.0");
+
+		bool flag_CN = root["computeCN"].asBool();
+		bool flag_MSD = root["computeMSD"].asBool();
+		bool flag_MSDnonAffine = root["computeMSDnonAffine"].asBool();
+
+		if (flag_CN)
+		{
+			config_equi.compute_CN(CN_rcut);
+			config_equi.CN_to_file(CNdir + "CN.0");
+		}
+
 		for (size_t istep = delta_step; istep <= end_step; istep += delta_step)
 		{
 			string str_istep = to_string(istep);
@@ -84,13 +89,13 @@ int main()
 			if (flag_MSD)
 			{
 				config_t.compute_msd(config_equi);
-				config_t.msd_to_file(MSDdir + "MSD." + str_istep);
+				config_t.to_file_MSD(MSDdir + "MSD." + str_istep);
 			}
 
 			if (flag_MSDnonAffine)
 			{
-				config_t.compute_msd_nonAffine(config_equi, Configuration_ParticleDynamic::ShearDirection::xy, rate);
-				config_t.nonAffineMSD_to_file(MSDnonAffinedir + "MSDnonAffine." + str_istep);
+				config_t.compute_shear_MSDnonAffine(config_equi, Configuration_ParticleDynamic::ShearDirection::xy, rate);
+				config_t.to_file_nonAffineMSD(MSDnonAffinedir + "MSDnonAffine." + str_istep);
 			}
 
 		}
