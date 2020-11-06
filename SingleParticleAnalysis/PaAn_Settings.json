@@ -11,7 +11,8 @@
   "equi_config_fname": "data.T0.42.Equi",
   "output_path": "./test/",
   "CN_rcut": 1.0,
-  "computeCN": true,
-  "computeMSD": true,
-  "computeMSDnonAffine": true
+  "computeCN": false,
+  "computeMSD": false,
+  "computeMSDnonAffine": false,
+  "MSDnonAffine_ave_gradient": true
 }

@@ -174,6 +174,52 @@ void Configuration_ParticleDynamic::compute_shear_MSDnonAffine(const Configurati
 	return;
 }
 
+void Configuration_ParticleDynamic::compute_shear_MSDnonAffine(const Configuration& config_t0, Configuration_ParticleDynamic::ShearDirection shear_direction, double shear_rate, const vector<double>& gradient_ave_position, double step_time)
+{
+	double lx = get_xhi() - get_xlo();
+	double ly = get_yhi() - get_ylo();
+	double lz = get_zhi() - get_zlo();
+
+	double lx_t0 = config_t0.get_xhi() - config_t0.get_xlo();
+	double ly_t0 = config_t0.get_yhi() - config_t0.get_ylo();
+	double lz_t0 = config_t0.get_zhi() - config_t0.get_zlo();
+
+	double dt = (get_timestep() - config_t0.get_timestep()) * step_time;
+
+	msd_nonAffine.resize(get_particle().size() + 1);
+	for (size_t i = 0; i < get_particle().size(); i++)
+	{
+		const Particle p_pa = get_particle()[i];
+		const Particle p_pa_t0 = config_t0.get_particle(p_pa.id);
+		double drx = p_pa.rx + p_pa.box_x * lx - p_pa_t0.rx - p_pa_t0.box_x * lx_t0;
+		double dry = p_pa.ry + p_pa.box_y * ly - p_pa_t0.ry - p_pa_t0.box_y * ly_t0;
+		double drz = p_pa.rz + p_pa.box_z * lz - p_pa_t0.rz - p_pa_t0.box_z * lz_t0;
+
+		switch (shear_direction)
+		{
+		case Configuration_ParticleDynamic::ShearDirection::xy:
+			drx -= gradient_ave_position[p_pa.id] * shear_rate * dt;
+			break;
+		case Configuration_ParticleDynamic::ShearDirection::xz:
+			drx -= gradient_ave_position[p_pa.id] * shear_rate * dt;
+			break;
+		case Configuration_ParticleDynamic::ShearDirection::yz:
+			dry -= gradient_ave_position[p_pa.id] * shear_rate * dt;
+			break;
+		default:
+			break;
+		}
+
+		double _msd_nonAfine = drx * drx + dry * dry + drz * drz;
+		msd_nonAffine[i].particle_id = p_pa.id;
+		msd_nonAffine[i].MSD = _msd_nonAfine;
+		msd_nonAffine[i].MSD_x = drx * drx;
+		msd_nonAffine[i].MSD_y = dry * dry;
+		msd_nonAffine[i].MSD_z = drz * drz;
+	}
+	return;
+}
+
 const MSD& Configuration_ParticleDynamic::get_MSDnonAffine(size_t _id)
 {
 	for (size_t i = 0; i < msd.size(); i++)

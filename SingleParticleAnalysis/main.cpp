@@ -60,6 +60,8 @@ int main()
 		mkdir(MSDdir);
 		string MSDnonAffinedir = output_path + "MSDnonAffine/";
 		mkdir(MSDnonAffinedir);
+		string MSDnonAffine_gradient_ave_dir = output_path + "MSDnonAffineGrdAve/";
+		mkdir(MSDnonAffine_gradient_ave_dir);
 		string statisticDir = output_path + "stastics/";
 		Configuration_StaticStructure config_equi
 		(equi_data_fpath + equi_fname, Configuration::BoxType::orthogonal, Configuration::PairStyle::single);
@@ -68,15 +70,27 @@ int main()
 		bool flag_CN = root["computeCN"].asBool();
 		bool flag_MSD = root["computeMSD"].asBool();
 		bool flag_MSDnonAffine = root["computeMSDnonAffine"].asBool();
-
+		bool flag_MSDnonAffine_ave_gradient = root["MSDnonAffine_ave_gradient"].asBool();
 		if (flag_CN)
 		{
 			config_equi.compute_CN(CN_rcut);
 			config_equi.CN_to_file(CNdir + "CN.0");
 		}
+		vector<double> y_sum(config_equi.get_particle().size(), 0);
+		vector<double> x_sum(config_equi.get_particle().size(), 0);
+		vector<double> z_sum(config_equi.get_particle().size(), 0);
+		for (size_t i = 0; i < config_equi.get_particle().size(); i++)
+		{
+			const Particle& pa = config_equi.get_particle()[i];
+			x_sum[pa.id] = pa.rx;
+			y_sum[pa.id] = pa.ry;
+			z_sum[pa.id] = pa.rz;
+		}
 
+		size_t ncounter = 0;
 		for (size_t istep = delta_step; istep <= end_step; istep += delta_step)
 		{
+			ncounter++;
 			string str_istep = to_string(istep);
 			string config_t_fname = data_fpath + fname_prefix + str_istep + fname_postfix;
 			Configuration_ParticleDynamic config_t(config_t_fname, Configuration::BoxType::tilt);
@@ -96,6 +110,24 @@ int main()
 			{
 				config_t.compute_shear_MSDnonAffine(config_equi, Configuration_ParticleDynamic::ShearDirection::xy, rate);
 				config_t.to_file_nonAffineMSD(MSDnonAffinedir + "MSDnonAffine." + str_istep);
+			}
+
+			if (flag_MSDnonAffine_ave_gradient)
+			{
+				for (size_t i = 0; i < config_t.get_particle().size(); i++)
+				{
+					const Particle& pa = config_t.get_particle()[i];
+					x_sum[pa.id] += pa.rx;
+					y_sum[pa.id] += pa.ry;
+					z_sum[pa.id] += pa.rz;
+				}
+				vector<double> y_ave = y_sum;
+				for (size_t i = 0; i < y_ave.size(); i++)
+				{
+					y_ave[i] /= ncounter;
+				}
+				config_t.compute_shear_MSDnonAffine(config_equi, Configuration_ParticleDynamic::ShearDirection::xy, rate, y_ave);
+				config_t.to_file_nonAffineMSD(MSDnonAffine_gradient_ave_dir + "MSDnonAffineGrdAve." + str_istep);
 			}
 
 		}

@@ -92,7 +92,8 @@ public:
 	};
 
 
-	void compute_shear_MSDnonAffine(const Configuration& config_t0, Configuration_ParticleDynamic::ShearDirection shear_direction, double shear_rate, double dt = 0.0025);
+	void compute_shear_MSDnonAffine(const Configuration& config_t0, Configuration_ParticleDynamic::ShearDirection shear_direction, double shear_rate, double step_time = 0.0025);
+	void compute_shear_MSDnonAffine(const Configuration& config_t0, Configuration_ParticleDynamic::ShearDirection shear_direction, double shear_rate, const vector<double>& gradient_ave_position, double step_time = 0.0025);
 
 	inline const std::vector<MSD>& get_MSDnonAffine()
 	{
