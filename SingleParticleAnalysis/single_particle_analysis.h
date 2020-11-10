@@ -92,8 +92,10 @@ public:
 	};
 
 
-	void compute_shear_MSDnonAffine(const Configuration& config_t0, Configuration_ParticleDynamic::ShearDirection shear_direction, double shear_rate, double step_time = 0.0025);
-	void compute_shear_MSDnonAffine(const Configuration& config_t0, Configuration_ParticleDynamic::ShearDirection shear_direction, double shear_rate, const vector<double>& gradient_ave_position, double step_time = 0.0025);
+	void compute_shear_MSDnonAffine(const Configuration& config_t0, Configuration_ParticleDynamic::ShearDirection shear_direction, double shear_rate, double step_time = 0.0025); //按t时刻粒子梯度方向上的位置（周期性）计算仿射形变
+	void compute_shear_MSDnonAffine(const Configuration& config_t0, Configuration_ParticleDynamic::ShearDirection shear_direction, double shear_rate, const vector<double>& gradient_ave_position, double step_time = 0.0025);//按一段时间内梯度方向上的平均位置（周期性）计算仿射形变
+	void compute_shear_MSDnonAffine_t0(const Configuration& config_t0, Configuration_ParticleDynamic::ShearDirection shear_direction, double shear_rate, double step_time = 0.0025);
+
 
 	inline const std::vector<MSD>& get_MSDnonAffine()
 	{

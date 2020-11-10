@@ -30,6 +30,7 @@ int main()
 		double tau_alpha = root["tau_alpha"].asDouble();
 		double rate = wi / tau_alpha;
 		string equi_fname = root["equi_config_fname"].asString();
+		size_t start_step = root["start_step"].asUInt();
 		size_t end_step = root["end_step"].asLargestUInt();
 		size_t delta_step = root["delta_step"].asLargestUInt();
 		string fname_prefix = root["fname_prefix"].asString();
@@ -54,23 +55,34 @@ int main()
 
 		void mkdir(std::string path);
 		mkdir(output_path);
-		string CNdir = output_path + "CN/";
-		mkdir(CNdir);
-		string MSDdir = output_path + "MSD/";
-		mkdir(MSDdir);
-		string MSDnonAffinedir = output_path + "MSDnonAffine/";
-		mkdir(MSDnonAffinedir);
-		string MSDnonAffine_gradient_ave_dir = output_path + "MSDnonAffineGrdAve/";
-		mkdir(MSDnonAffine_gradient_ave_dir);
-		string statisticDir = output_path + "stastics/";
+
+		//string statisticDir = output_path + "stastics/";
+
 		Configuration_StaticStructure config_equi
 		(equi_data_fpath + equi_fname, Configuration::BoxType::orthogonal, Configuration::PairStyle::single);
-		config_equi.set_time_step(0);
+		config_equi.set_time_step(0); //平衡态设为0时间点
 
 		bool flag_CN = root["computeCN"].asBool();
 		bool flag_MSD = root["computeMSD"].asBool();
 		bool flag_MSDnonAffine = root["computeMSDnonAffine"].asBool();
+		bool flag_MSDnonAffine_t0 = root["MSDnonAffine_t0"].asBool();
 		bool flag_MSDnonAffine_ave_gradient = root["MSDnonAffine_ave_gradient"].asBool();
+
+		string CNdir = output_path + "CN/";
+		if (flag_CN) mkdir(CNdir);
+
+		string MSDdir = output_path + "MSD/";
+		if (flag_MSD) mkdir(MSDdir);
+
+		string MSDnonAffinedir = output_path + "MSDnonAffine/";
+		if (flag_MSDnonAffine) mkdir(MSDnonAffinedir);
+
+		string MSDnonAffine_gradient_ave_dir = output_path + "MSDnonAffineGrdAve/";
+		if (flag_MSDnonAffine_ave_gradient) mkdir(MSDnonAffine_gradient_ave_dir);
+
+		string MSDnonAffine_t0_dir = output_path + "MSDnonAffine_t0/";
+		if (flag_MSDnonAffine_t0) mkdir(MSDnonAffine_t0_dir);
+
 		if (flag_CN)
 		{
 			config_equi.compute_CN(CN_rcut);
@@ -88,7 +100,7 @@ int main()
 		}
 
 		size_t ncounter = 0;
-		for (size_t istep = delta_step; istep <= end_step; istep += delta_step)
+		for (size_t istep = start_step; istep <= end_step; istep += delta_step)
 		{
 			ncounter++;
 			string str_istep = to_string(istep);
@@ -110,6 +122,12 @@ int main()
 			{
 				config_t.compute_shear_MSDnonAffine(config_equi, Configuration_ParticleDynamic::ShearDirection::xy, rate);
 				config_t.to_file_nonAffineMSD(MSDnonAffinedir + "MSDnonAffine." + str_istep);
+			}
+
+			if (flag_MSDnonAffine_t0)
+			{
+				config_t.compute_shear_MSDnonAffine_t0(config_equi, Configuration_ParticleDynamic::ShearDirection::xy, rate);
+				config_t.to_file_nonAffineMSD(MSDnonAffine_t0_dir + "MSDnonAffine_t0." + str_istep);
 			}
 
 			if (flag_MSDnonAffine_ave_gradient)

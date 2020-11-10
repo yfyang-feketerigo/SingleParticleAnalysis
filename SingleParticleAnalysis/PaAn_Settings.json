@@ -5,6 +5,7 @@
   "data_fpath": "./",
   "fname_prefix": "data.restart.shear.wi.10.",
   "fname_postfix": null,
+  "start_step": 240000,
   "end_step": 240000,
   "delta_step": 240000,
   "equi_data_fpath": "./",
@@ -14,5 +15,6 @@
   "computeCN": false,
   "computeMSD": false,
   "computeMSDnonAffine": false,
-  "MSDnonAffine_ave_gradient": true
+  "MSDnonAffine_ave_gradient": false,
+  "MSDnonAffine_t0": true
 }
