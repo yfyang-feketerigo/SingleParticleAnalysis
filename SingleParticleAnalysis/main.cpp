@@ -30,8 +30,10 @@ int main()
 		double tau_alpha = root["tau_alpha"].asDouble();
 		double rate = wi / tau_alpha;
 		string equi_fname = root["equi_config_fname"].asString();
-		size_t start_step = root["start_step"].asUInt();
-		size_t end_step = root["end_step"].asLargestUInt();
+		//size_t start_step = root["start_step"].asUInt();
+		//size_t end_step = root["end_step"].asLargestUInt();
+		size_t start_moment = root["start_moment"].asLargestUInt();
+		size_t moment_number = root["moment_number"].asLargestUInt();
 		size_t delta_step = root["delta_step"].asLargestUInt();
 		string fname_prefix = root["fname_prefix"].asString();
 		string fname_postfix = root["fname_postfix"].asString();
@@ -100,8 +102,9 @@ int main()
 		}
 
 		size_t ncounter = 0;
-		for (size_t istep = start_step; istep <= end_step; istep += delta_step)
+		for (size_t imoment = start_moment; imoment <= moment_number; imoment++)
 		{
+			size_t istep = imoment * delta_step;
 			ncounter++;
 			string str_istep = to_string(istep);
 			string config_t_fname = data_fpath + fname_prefix + str_istep + fname_postfix;
