@@ -69,7 +69,8 @@ int main()
 		bool flag_MSDnonAffine = root["computeMSDnonAffine"].asBool();
 		bool flag_MSDnonAffine_t0 = root["MSDnonAffine_t0"].asBool();
 		bool flag_MSDnonAffine_ave_gradient = root["MSDnonAffine_ave_gradient"].asBool();
-
+		bool flag_computeFlowDisplacement = root["computeFlowDisplacement"].asBool();
+		bool flag_computeFlowAveVelocity = root["computeFlowAveVelocity"].asBool();
 		string CNdir = output_path + "CN/";
 		if (flag_CN) mkdir(CNdir);
 
@@ -84,6 +85,12 @@ int main()
 
 		string MSDnonAffine_t0_dir = output_path + "MSDnonAffine_t0/";
 		if (flag_MSDnonAffine_t0) mkdir(MSDnonAffine_t0_dir);
+
+		string flow_displacement_dir = output_path + "FlowDisplacement/";
+		if (flag_computeFlowDisplacement) mkdir(flow_displacement_dir);
+
+		string flow_ave_velocity_dir = output_path + "FlowAveVelocity/";
+		if (flag_computeFlowAveVelocity) mkdir(flow_ave_velocity_dir);
 
 		if (flag_CN)
 		{
@@ -102,6 +109,7 @@ int main()
 		}
 
 		size_t ncounter = 0;
+		Configuration_ParticleDynamic config_last_moment;
 		for (size_t imoment = start_moment; imoment <= moment_number; imoment++)
 		{
 			size_t istep = imoment * delta_step;
@@ -151,6 +159,38 @@ int main()
 				config_t.to_file_nonAffineMSD(MSDnonAffine_gradient_ave_dir + "MSDnonAffineGrdAve." + str_istep);
 			}
 
+			if (flag_computeFlowDisplacement)//!计算单粒子流场方向位移，以进一步计算流场问题，可以淘汰之前剪切带程序。
+			{
+				if (imoment == start_moment)
+				{
+					config_t.compute_shear_flow_displacement(config_equi, Configuration_ParticleDynamic::ShearDirection::xy);
+				}
+				else
+				{
+					config_t.compute_shear_flow_displacement(config_last_moment, Configuration_ParticleDynamic::ShearDirection::xy);
+				}
+				config_t.to_file_flow_displacement(flow_displacement_dir + "FlowDisplacement." + str_istep);
+				//config_last_moment = config_t;
+			}
+
+			if (flag_computeFlowAveVelocity)
+			{
+				if (imoment == start_moment)
+				{
+					config_t.compute_shear_flow_ave_velocity(config_equi, Configuration_ParticleDynamic::ShearDirection::xy);
+				}
+				else
+				{
+					config_t.compute_shear_flow_ave_velocity(config_last_moment, Configuration_ParticleDynamic::ShearDirection::xy);
+				}
+				config_t.to_file_flow_ave_velocity(flow_ave_velocity_dir + "FlowAveVelocity." + str_istep);
+			}
+
+			bool flag_store_last_moment = flag_computeFlowAveVelocity || flag_computeFlowDisplacement;
+			if (flag_store_last_moment)
+			{
+				config_last_moment = config_t;
+			}
 		}
 		cout << "####################################################################" << endl;
 		//cout << "PROGRAM END, TOTAL TIME USED: " << timer.elapsed() << "s" << endl;

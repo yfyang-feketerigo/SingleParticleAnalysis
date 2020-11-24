@@ -16,5 +16,7 @@
   "computeMSD": false,
   "computeMSDnonAffine": false,
   "MSDnonAffine_ave_gradient": false,
-  "MSDnonAffine_t0": true
+  "MSDnonAffine_t0": false,
+  "computeFlowDisplacement": true,
+  "computeFlowAveVelocity": true
 }

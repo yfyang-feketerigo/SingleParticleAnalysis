@@ -143,8 +143,8 @@ void Configuration_ParticleDynamic::compute_shear_MSDnonAffine(const Configurati
 	msd_nonAffine.resize(get_particle().size() + 1);
 	for (size_t i = 0; i < get_particle().size(); i++)
 	{
-		const Particle p_pa = get_particle()[i];
-		const Particle p_pa_t0 = config_t0.get_particle(p_pa.id);
+		const Particle& p_pa = get_particle()[i];
+		const Particle& p_pa_t0 = config_t0.get_particle(p_pa.id);
 		double drx = p_pa.rx + p_pa.box_x * lx - p_pa_t0.rx - p_pa_t0.box_x * lx_t0;
 		double dry = p_pa.ry + p_pa.box_y * ly - p_pa_t0.ry - p_pa_t0.box_y * ly_t0;
 		double drz = p_pa.rz + p_pa.box_z * lz - p_pa_t0.rz - p_pa_t0.box_z * lz_t0;
@@ -189,8 +189,8 @@ void Configuration_ParticleDynamic::compute_shear_MSDnonAffine(const Configurati
 	msd_nonAffine.resize(get_particle().size() + 1);
 	for (size_t i = 0; i < get_particle().size(); i++)
 	{
-		const Particle p_pa = get_particle()[i];
-		const Particle p_pa_t0 = config_t0.get_particle(p_pa.id);
+		const Particle& p_pa = get_particle()[i];
+		const Particle& p_pa_t0 = config_t0.get_particle(p_pa.id);
 		double drx = p_pa.rx + p_pa.box_x * lx - p_pa_t0.rx - p_pa_t0.box_x * lx_t0;
 		double dry = p_pa.ry + p_pa.box_y * ly - p_pa_t0.ry - p_pa_t0.box_y * ly_t0;
 		double drz = p_pa.rz + p_pa.box_z * lz - p_pa_t0.rz - p_pa_t0.box_z * lz_t0;
@@ -235,8 +235,8 @@ void Configuration_ParticleDynamic::compute_shear_MSDnonAffine_t0(const Configur
 	msd_nonAffine.resize(get_particle().size() + 1);
 	for (size_t i = 0; i < get_particle().size(); i++)
 	{
-		const Particle p_pa = get_particle()[i];
-		const Particle p_pa_t0 = config_t0.get_particle(p_pa.id);
+		const Particle& p_pa = get_particle()[i];
+		const Particle& p_pa_t0 = config_t0.get_particle(p_pa.id);
 		double drx = p_pa.rx + p_pa.box_x * lx - p_pa_t0.rx - p_pa_t0.box_x * lx_t0;
 		double dry = p_pa.ry + p_pa.box_y * ly - p_pa_t0.ry - p_pa_t0.box_y * ly_t0;
 		double drz = p_pa.rz + p_pa.box_z * lz - p_pa_t0.rz - p_pa_t0.box_z * lz_t0;
@@ -266,6 +266,80 @@ void Configuration_ParticleDynamic::compute_shear_MSDnonAffine_t0(const Configur
 	return;
 }
 
+void Configuration_ParticleDynamic::compute_shear_flow_displacement(const Configuration& config_t0, Configuration_ParticleDynamic::ShearDirection shear_direction, double step_time)
+{
+	double lx = get_xhi() - get_xlo();
+	double ly = get_yhi() - get_ylo();
+	double lz = get_zhi() - get_zlo();
+
+	double lx_t0 = config_t0.get_xhi() - config_t0.get_xlo();
+	double ly_t0 = config_t0.get_yhi() - config_t0.get_ylo();
+	double lz_t0 = config_t0.get_zhi() - config_t0.get_zlo();
+
+	//double dt = (get_timestep() - config_t0.get_timestep()) * step_time;
+
+	flow_displacement.resize(get_particle_num() + 1);
+	for (size_t i = 0; i < get_particle().size(); i++)
+	{
+		const Particle& p_pa = get_particle()[i];
+		const Particle& p_pa_t0 = config_t0.get_particle(p_pa.id);
+		flow_displacement[i].particle_id = p_pa.id;
+		switch (shear_direction)
+		{
+		case Configuration_ParticleDynamic::ShearDirection::xy:
+			flow_displacement[i].dr = p_pa.rx + p_pa.box_x * lx - p_pa_t0.rx - p_pa_t0.box_x * lx_t0;
+			break;
+		case Configuration_ParticleDynamic::ShearDirection::xz:
+			flow_displacement[i].dr = p_pa.rx + p_pa.box_x * lx - p_pa_t0.rx - p_pa_t0.box_x * lx_t0;
+			break;
+		case Configuration_ParticleDynamic::ShearDirection::yz:
+			flow_displacement[i].dr = p_pa.ry + p_pa.box_y * ly - p_pa_t0.ry - p_pa_t0.box_y * ly_t0;
+			break;
+		default:
+			break;
+		}
+
+	}
+	return;
+}
+
+void Configuration_ParticleDynamic::compute_shear_flow_ave_velocity(const Configuration& config_t0, Configuration_ParticleDynamic::ShearDirection shear_direction, double step_time)
+{
+	double lx = get_xhi() - get_xlo();
+	double ly = get_yhi() - get_ylo();
+	double lz = get_zhi() - get_zlo();
+
+	double lx_t0 = config_t0.get_xhi() - config_t0.get_xlo();
+	double ly_t0 = config_t0.get_yhi() - config_t0.get_ylo();
+	double lz_t0 = config_t0.get_zhi() - config_t0.get_zlo();
+
+	double dt = (get_timestep() - config_t0.get_timestep()) * step_time;
+
+	flow_ave_velocity.resize(get_particle_num() + 1);
+	for (size_t i = 0; i < get_particle().size(); i++)
+	{
+		const Particle& p_pa = get_particle()[i];
+		const Particle& p_pa_t0 = config_t0.get_particle(p_pa.id);
+		flow_ave_velocity[i].particle_id = p_pa.id;
+		switch (shear_direction)
+		{
+		case Configuration_ParticleDynamic::ShearDirection::xy:
+			flow_ave_velocity[i].ave_v = p_pa.rx + p_pa.box_x * lx - p_pa_t0.rx - p_pa_t0.box_x * lx_t0;
+			break;
+		case Configuration_ParticleDynamic::ShearDirection::xz:
+			flow_ave_velocity[i].ave_v = p_pa.rx + p_pa.box_x * lx - p_pa_t0.rx - p_pa_t0.box_x * lx_t0;
+			break;
+		case Configuration_ParticleDynamic::ShearDirection::yz:
+			flow_ave_velocity[i].ave_v = p_pa.ry + p_pa.box_y * ly - p_pa_t0.ry - p_pa_t0.box_y * ly_t0;
+			break;
+		default:
+			break;
+		}
+		flow_ave_velocity[i].ave_v /= dt;
+	}
+	return;
+}
+
 const MSD& Configuration_ParticleDynamic::get_MSDnonAffine(size_t _id)
 {
 	for (size_t i = 0; i < msd.size(); i++)
@@ -277,6 +351,34 @@ const MSD& Configuration_ParticleDynamic::get_MSDnonAffine(size_t _id)
 	}
 	cerr << "particle " << _id << " msd not found!" << endl;
 	throw ("particle " + std::to_string(_id) + " msd not found!");
+}
+
+const Flow_Displacement& Configuration_ParticleDynamic::get_flow_displacement(size_t _id)
+{
+	for (size_t i = 0; i < flow_displacement.size(); i++)
+	{
+		if (_id == flow_displacement[i].particle_id)
+		{
+			return flow_displacement[i];
+		}
+	}
+	cerr << "particle " << _id << " flow displacement not found!" << endl;
+	throw ("particle " + std::to_string(_id) + " flow displacement not found!");
+}
+
+
+
+const Flow_Ave_Velocity& Configuration_ParticleDynamic::get_flow_ave_velocity(size_t _id)
+{
+	for (size_t i = 0; i < msd.size(); i++)
+	{
+		if (_id == flow_ave_velocity[i].particle_id)
+		{
+			return flow_ave_velocity[i];
+		}
+	}
+	cerr << "particle " << _id << " flow ave velocity not found!" << endl;
+	throw ("particle " + std::to_string(_id) + " flow ave velocity not found!");
 }
 
 vector<Particle> Configuration_ParticleDynamic::pick_cross_gradient_boundary_particle(const Configuration& config_t0, ShearDirection shear_direction)
@@ -378,6 +480,69 @@ void Configuration_ParticleDynamic::to_file_nonAffineMSD(std::string fname)
 	}
 	return;
 }
+
+void Configuration_ParticleDynamic::to_file_flow_displacement(std::string fname)
+{
+	//todo …–Œ¥≤‚ ‘
+	vector<double> _vec_flow_displacement(flow_displacement.size());
+	bool flag_same_seq = true;
+
+	for (size_t i = 0; i < get_particle().size(); i++)
+	{
+		if (get_particle()[i].id == flow_displacement[i].particle_id)
+		{
+			flag_same_seq = flag_same_seq && true;
+			_vec_flow_displacement[i] = flow_displacement[i].dr;
+		}
+		else
+		{
+			flag_same_seq = flag_same_seq && false;
+			_vec_flow_displacement[i] = get_flow_displacement(get_particle()[i].id).dr;
+		}
+	}
+	if (flag_same_seq)
+	{
+		to_dump(fname, { "flow_displacement" }, { _vec_flow_displacement });
+	}
+	else
+	{
+		string warning = "#WARNING: seq of vec_flow_displacement and vec_particle not match";
+		std::clog << warning << endl;
+		to_dump(fname, { "flow_displacement" }, { _vec_flow_displacement }, { warning });
+	}
+}
+
+void Configuration_ParticleDynamic::to_file_flow_ave_velocity(std::string fname)
+{
+	//todo …–Œ¥≤‚ ‘
+	vector<double> _vec_flow_ave_velocity(flow_ave_velocity.size());
+	bool flag_same_seq = true;
+
+	for (size_t i = 0; i < get_particle().size(); i++)
+	{
+		if (get_particle()[i].id == flow_ave_velocity[i].particle_id)
+		{
+			flag_same_seq = flag_same_seq && true;
+			_vec_flow_ave_velocity[i] = flow_ave_velocity[i].ave_v;
+		}
+		else
+		{
+			flag_same_seq = flag_same_seq && false;
+			_vec_flow_ave_velocity[i] = get_flow_ave_velocity(get_particle()[i].id).ave_v;
+		}
+	}
+	if (flag_same_seq)
+	{
+		to_dump(fname, { "flow_displacement" }, { _vec_flow_ave_velocity });
+	}
+	else
+	{
+		string warning = "#WARNING: seq of vec_flow_ave_veclocity and vec_particle not match";
+		std::clog << warning << endl;
+		to_dump(fname, { "flow_ave_velocity" }, { _vec_flow_ave_velocity }, { warning });
+	}
+}
+
 
 Configuration_ParticleDynamic Configuration_ParticleDynamic::gen_sub_config(const Configuration_ParticleDynamic& config_parents, vector<size_t> vec_id)
 {
