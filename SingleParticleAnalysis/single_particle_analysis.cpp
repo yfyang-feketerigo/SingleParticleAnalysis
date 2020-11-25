@@ -284,21 +284,25 @@ void Configuration_ParticleDynamic::compute_shear_flow_displacement(const Config
 		const Particle& p_pa = get_particle()[i];
 		const Particle& p_pa_t0 = config_t0.get_particle(p_pa.id);
 		flow_displacement[i].particle_id = p_pa.id;
+		flow_displacement[i].init_step = config_t0.get_timestep();
+		flow_displacement[i].now_step = get_timestep();
 		switch (shear_direction)
 		{
 		case Configuration_ParticleDynamic::ShearDirection::xy:
 			flow_displacement[i].dr = p_pa.rx + p_pa.box_x * lx - p_pa_t0.rx - p_pa_t0.box_x * lx_t0;
+			flow_displacement[i].grad_box_change = p_pa.box_y - p_pa_t0.box_y;
 			break;
 		case Configuration_ParticleDynamic::ShearDirection::xz:
 			flow_displacement[i].dr = p_pa.rx + p_pa.box_x * lx - p_pa_t0.rx - p_pa_t0.box_x * lx_t0;
+			flow_displacement[i].grad_box_change = p_pa.box_z - p_pa_t0.box_z;
 			break;
 		case Configuration_ParticleDynamic::ShearDirection::yz:
 			flow_displacement[i].dr = p_pa.ry + p_pa.box_y * ly - p_pa_t0.ry - p_pa_t0.box_y * ly_t0;
+			flow_displacement[i].grad_box_change = p_pa.box_z - p_pa_t0.box_z;
 			break;
 		default:
 			break;
 		}
-
 	}
 	return;
 }
@@ -325,12 +329,15 @@ void Configuration_ParticleDynamic::compute_shear_flow_ave_velocity(const Config
 		{
 		case Configuration_ParticleDynamic::ShearDirection::xy:
 			flow_ave_velocity[i].ave_v = p_pa.rx + p_pa.box_x * lx - p_pa_t0.rx - p_pa_t0.box_x * lx_t0;
+			flow_ave_velocity[i].grad_box_change = p_pa.box_y - p_pa_t0.box_y;
 			break;
 		case Configuration_ParticleDynamic::ShearDirection::xz:
 			flow_ave_velocity[i].ave_v = p_pa.rx + p_pa.box_x * lx - p_pa_t0.rx - p_pa_t0.box_x * lx_t0;
+			flow_ave_velocity[i].grad_box_change = p_pa.box_z - p_pa_t0.box_z;
 			break;
 		case Configuration_ParticleDynamic::ShearDirection::yz:
 			flow_ave_velocity[i].ave_v = p_pa.ry + p_pa.box_y * ly - p_pa_t0.ry - p_pa_t0.box_y * ly_t0;
+			flow_ave_velocity[i].grad_box_change = p_pa.box_z - p_pa_t0.box_z;
 			break;
 		default:
 			break;
@@ -485,6 +492,7 @@ void Configuration_ParticleDynamic::to_file_flow_displacement(std::string fname)
 {
 	//todo …–Œ¥≤‚ ‘
 	vector<double> _vec_flow_displacement(flow_displacement.size());
+	vector<double> _vec_flow_grad_box_change(flow_displacement.size());
 	bool flag_same_seq = true;
 
 	for (size_t i = 0; i < get_particle().size(); i++)
@@ -493,29 +501,73 @@ void Configuration_ParticleDynamic::to_file_flow_displacement(std::string fname)
 		{
 			flag_same_seq = flag_same_seq && true;
 			_vec_flow_displacement[i] = flow_displacement[i].dr;
+			_vec_flow_grad_box_change[i] = flow_displacement[i].grad_box_change;
 		}
 		else
 		{
 			flag_same_seq = flag_same_seq && false;
 			_vec_flow_displacement[i] = get_flow_displacement(get_particle()[i].id).dr;
+			_vec_flow_grad_box_change[i] = get_flow_displacement(get_particle()[i].id).grad_box_change;
 		}
 	}
+	string step_info = "# init_step: " + to_string(flow_displacement[0].init_step);
+	step_info += " now_step: " + to_string(flow_displacement[0].now_step);
 	if (flag_same_seq)
 	{
-		to_dump(fname, { "flow_displacement" }, { _vec_flow_displacement });
+		to_dump(fname, { "flow_displacement", "grad_box_change" }, { _vec_flow_displacement, _vec_flow_grad_box_change }, { step_info });
 	}
 	else
 	{
 		string warning = "#WARNING: seq of vec_flow_displacement and vec_particle not match";
 		std::clog << warning << endl;
-		to_dump(fname, { "flow_displacement" }, { _vec_flow_displacement }, { warning });
+		to_dump(fname, { "flow_displacement", "grad_box_change" }, { _vec_flow_displacement, _vec_flow_grad_box_change }, { warning,step_info });
 	}
 }
+/*
+void Configuration_ParticleDynamic::to_file_flow_displacement_non_cross_box(std::string fname)
+{
+	vector<double> _vec_flow_displacement;
+	vector<double> _vec_flow_grad_box_change;
+	bool flag_same_seq = true;
 
+	for (size_t i = 0; i < get_particle().size(); i++)
+	{
+		if (get_particle()[i].id == flow_displacement[i].particle_id)
+		{
+			flag_same_seq = flag_same_seq && true;
+			if (flow_displacement[i].grad_box_change == 0)
+			{
+				_vec_flow_displacement.push_back(flow_displacement[i].dr);
+				_vec_flow_grad_box_change.push_back(flow_displacement[i].grad_box_change);
+			}
+		}
+		else
+		{
+			flag_same_seq = flag_same_seq && false;
+			if (get_flow_displacement(get_particle()[i].id).grad_box_change == 0)
+			{
+				_vec_flow_displacement.push_back(get_flow_displacement(get_particle()[i].id).dr);
+				_vec_flow_grad_box_change.push_back(get_flow_displacement(get_particle()[i].id).grad_box_change);
+			}
+		}
+	}
+	if (flag_same_seq)
+	{
+		to_dump(fname, { "flow_displacement", "grad_box_change" }, { _vec_flow_displacement, _vec_flow_grad_box_change });
+	}
+	else
+	{
+		string warning = "#WARNING: seq of vec_flow_displacement and vec_particle not match";
+		std::clog << warning << endl;
+		to_dump(fname, { "flow_displacement", "grad_box_change" }, { _vec_flow_displacement, _vec_flow_grad_box_change }, { warning });
+	}
+}
+*/
 void Configuration_ParticleDynamic::to_file_flow_ave_velocity(std::string fname)
 {
 	//todo …–Œ¥≤‚ ‘
 	vector<double> _vec_flow_ave_velocity(flow_ave_velocity.size());
+	vector<double> _vec_flow_grad_box_change(flow_ave_velocity.size());
 	bool flag_same_seq = true;
 
 	for (size_t i = 0; i < get_particle().size(); i++)
@@ -524,24 +576,65 @@ void Configuration_ParticleDynamic::to_file_flow_ave_velocity(std::string fname)
 		{
 			flag_same_seq = flag_same_seq && true;
 			_vec_flow_ave_velocity[i] = flow_ave_velocity[i].ave_v;
+			_vec_flow_grad_box_change[i] = flow_ave_velocity[i].grad_box_change;
 		}
 		else
 		{
 			flag_same_seq = flag_same_seq && false;
 			_vec_flow_ave_velocity[i] = get_flow_ave_velocity(get_particle()[i].id).ave_v;
+			_vec_flow_grad_box_change[i] = get_flow_ave_velocity(get_particle()[i].id).grad_box_change;
 		}
 	}
 	if (flag_same_seq)
 	{
-		to_dump(fname, { "flow_displacement" }, { _vec_flow_ave_velocity });
+		to_dump(fname, { "flow_displacement", "grad_box_change" }, { _vec_flow_ave_velocity, _vec_flow_grad_box_change });
 	}
 	else
 	{
 		string warning = "#WARNING: seq of vec_flow_ave_veclocity and vec_particle not match";
 		std::clog << warning << endl;
-		to_dump(fname, { "flow_ave_velocity" }, { _vec_flow_ave_velocity }, { warning });
+		to_dump(fname, { "flow_ave_velocity" , "grad_box_change" }, { _vec_flow_ave_velocity, _vec_flow_grad_box_change }, { warning });
 	}
 }
+
+/*void Configuration_ParticleDynamic::to_file_flow_ave_velocity_non_cross_box(std::string fname)
+{
+	vector<double> _vec_flow_ave_velocity;
+	vector<double> _vec_flow_grad_box_change;
+	bool flag_same_seq = true;
+
+	for (size_t i = 0; i < get_particle().size(); i++)
+	{
+		if (get_particle()[i].id == flow_ave_velocity[i].particle_id)
+		{
+			flag_same_seq = flag_same_seq && true;
+			if (flow_ave_velocity[i].grad_box_change == 0)
+			{
+				_vec_flow_ave_velocity.push_back(flow_ave_velocity[i].ave_v);
+				_vec_flow_grad_box_change.push_back(flow_ave_velocity[i].grad_box_change);
+			}
+		}
+		else
+		{
+			flag_same_seq = flag_same_seq && false;
+			if (get_flow_ave_velocity(get_particle()[i].id).grad_box_change == 0)
+			{
+				_vec_flow_ave_velocity.push_back(get_flow_ave_velocity(get_particle()[i].id).ave_v);
+				_vec_flow_grad_box_change.push_back(get_flow_ave_velocity(get_particle()[i].id).grad_box_change);
+			}
+		}
+	}
+	if (flag_same_seq)
+	{
+		to_dump(fname, { "flow_displacement", "grad_box_change" }, { _vec_flow_ave_velocity, _vec_flow_grad_box_change });
+	}
+	else
+	{
+		string warning = "#WARNING: seq of vec_flow_ave_veclocity and vec_particle not match";
+		std::clog << warning << endl;
+		to_dump(fname, { "flow_ave_velocity" , "grad_box_change" }, { _vec_flow_ave_velocity, _vec_flow_grad_box_change }, { warning });
+	}
+}*/
 
 
 Configuration_ParticleDynamic Configuration_ParticleDynamic::gen_sub_config(const Configuration_ParticleDynamic& config_parents, vector<size_t> vec_id)

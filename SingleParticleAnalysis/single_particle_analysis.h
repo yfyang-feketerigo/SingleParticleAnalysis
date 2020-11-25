@@ -59,12 +59,16 @@ struct Flow_Displacement
 {
 	size_t particle_id;
 	double dr;
+	int grad_box_change;
+	size_t init_step;
+	size_t now_step;
 };
 
 struct Flow_Ave_Velocity
 {
 	size_t particle_id;
 	double ave_v;
+	int grad_box_change;
 };
 
 class Configuration_ParticleDynamic :public Configuration_StaticStructure
@@ -133,6 +137,8 @@ public:
 	void to_file_MSD(std::string fname);
 	void to_file_nonAffineMSD(std::string fname);
 	void to_file_flow_displacement(std::string fname);
+	//void to_file_flow_displacement_non_cross_box(std::string fname);
 	void to_file_flow_ave_velocity(std::string fname);
+	//void to_file_flow_ave_velocity_non_cross_box(std::string fname);
 	Configuration_ParticleDynamic gen_sub_config(const Configuration_ParticleDynamic& config_parents, vector<size_t> vec_id);
 };

@@ -87,10 +87,20 @@ int main()
 		if (flag_MSDnonAffine_t0) mkdir(MSDnonAffine_t0_dir);
 
 		string flow_displacement_dir = output_path + "FlowDisplacement/";
-		if (flag_computeFlowDisplacement) mkdir(flow_displacement_dir);
+		string flow_displacement_non_cross_box_dir = output_path + "FlowDisplacement_nonCrossBox/";
+		if (flag_computeFlowDisplacement)
+		{
+			mkdir(flow_displacement_dir);
+			//mkdir(flow_displacement_non_cross_box_dir);
+		}
 
 		string flow_ave_velocity_dir = output_path + "FlowAveVelocity/";
-		if (flag_computeFlowAveVelocity) mkdir(flow_ave_velocity_dir);
+		string flow_ave_velocity_non_cross_box_dir = output_path + "FlowAveVelocity_nonCrossBox/";
+		if (flag_computeFlowAveVelocity)
+		{
+			mkdir(flow_ave_velocity_dir);
+			//mkdir(flow_ave_velocity_non_cross_box_dir);
+		}
 
 		if (flag_CN)
 		{
@@ -170,7 +180,6 @@ int main()
 					config_t.compute_shear_flow_displacement(config_last_moment, Configuration_ParticleDynamic::ShearDirection::xy);
 				}
 				config_t.to_file_flow_displacement(flow_displacement_dir + "FlowDisplacement." + str_istep);
-				//config_last_moment = config_t;
 			}
 
 			if (flag_computeFlowAveVelocity)
@@ -190,6 +199,7 @@ int main()
 			if (flag_store_last_moment)
 			{
 				config_last_moment = config_t;
+				cout << config_last_moment.get_timestep() << endl;
 			}
 		}
 		cout << "####################################################################" << endl;

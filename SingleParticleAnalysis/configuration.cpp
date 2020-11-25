@@ -240,52 +240,6 @@ void Configuration::to_data(string fname, BoxType _boxtype)
 	return;
 }
 
-void Configuration::to_dump(string fname, std::initializer_list<string> add_para_name, std::initializer_list<vector<double>> add_para, vector<string> comments)
-{
-	ofstream ofile;
-	ofile.open(fname);
-	if (!ofile.is_open())
-	{
-		cerr << fname << " open failed" << endl;
-		throw (fname + " open failed");
-	}
-	for (size_t i = 0; i < comments.size(); i++)
-	{
-		ofile << comments[i] << endl;
-	}
-	ofile << "ITEM: TIMESTEP" << endl;
-	ofile << timestep << endl;
-	ofile << "ITEM: NUMBER OF ATOMS" << endl;
-	ofile << particle_num << endl;
-	ofile << "ITEM: BOX BOUNDS xy xz yz pp pp pp " << endl;
-	auto xvi = { 0.,xy,xz,xy + xz };
-	auto x_minmax = std::minmax_element(xvi.begin(), xvi.end());
-	double visual_xlo = xlo + *x_minmax.first;
-	double visual_xhi = xhi + *x_minmax.second;
-	auto yvi = { 0.,yz };
-	auto y_minmax = std::minmax_element(yvi.begin(), yvi.end());
-	double visual_ylo = ylo + *y_minmax.first;
-	double visual_yhi = yhi + *y_minmax.second;
-	ofile << visual_xlo << " " << visual_xhi << " " << xy << endl;
-	ofile << visual_ylo << " " << visual_yhi << " " << xz << endl;
-	ofile << zlo << " " << zhi << " " << yz << endl;
-	ofile << "ITEM: ATOMS id type x y z ix iy iz ";
-	for (auto it_li = add_para_name.begin(); it_li < add_para_name.end(); it_li++)
-	{
-		ofile << *it_li << " ";
-	}
-	ofile << endl;
-	for (size_t i = 0; i < vec_particle.size(); i++)
-	{
-		Particle& pa = vec_particle[i];
-		ofile << pa.id << " " << pa.type << " " << pa.rx << " " << pa.ry << " " << pa.rz << " ";
-		ofile << pa.box_x << " " << pa.box_y << " " << pa.box_z << " ";
-		for (auto it_li = add_para.begin(); it_li < add_para.end(); it_li++)
-		{
-			ofile << (*it_li)[i] << " ";
-		}
-		ofile << endl;
-	}
-	ofile.close();
-	return;
-}
+//template <typename T>
+//void Configuration::to_dump(string fname, std::initializer_list<string> add_para_name, std::initializer_list<vector<T>> add_para, vector<string> comments)
+
