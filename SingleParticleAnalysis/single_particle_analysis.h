@@ -52,10 +52,13 @@ struct MSD
 	double MSD_x;
 	double MSD_y;
 	double MSD_z;
+	double dx;
+	double dy;
+	double dz;
 	double MSD;
 };
 
-struct Flow_Displacement
+struct Flow_deltaDisplacement
 {
 	size_t particle_id;
 	double dr;
@@ -80,7 +83,7 @@ private:
 	std::vector<MSD> msd;
 	std::vector<MSD> msd_nonAffine;
 	std::vector<Particle> cross_gradient_boundary_particle;
-	std::vector<Flow_Displacement> flow_displacement;
+	std::vector<Flow_deltaDisplacement> flow_delta_displacement;
 	std::vector<Flow_Ave_Velocity> flow_ave_velocity;
 public:
 	/*Configuration_ParticleDynamic(std::string config_fname)
@@ -120,11 +123,11 @@ public:
 	const MSD& get_MSDnonAffine(size_t _id);
 
 
-	inline const std::vector<Flow_Displacement>& get_flow_displacement()
+	inline const std::vector<Flow_deltaDisplacement>& get_flow_displacement()
 	{
-		return flow_displacement;
+		return flow_delta_displacement;
 	}
-	const Flow_Displacement& get_flow_displacement(size_t _id);
+	const Flow_deltaDisplacement& get_flow_displacement(size_t _id);
 
 	inline const std::vector<Flow_Ave_Velocity>& get_flow_ave_velocity()
 	{

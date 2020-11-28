@@ -1,3 +1,4 @@
+# init_step: 0 now_step: 240000
 ITEM: TIMESTEP
 240000
 ITEM: NUMBER OF ATOMS
@@ -6,7 +7,7 @@ ITEM: BOX BOUNDS xy xz yz pp pp pp
 0 28.965 9.655
 0 19.31 0
 0 9.655 0
-ITEM: ATOMS id type x y z ix iy iz flow_displacement grad_box_change 
+ITEM: ATOMS id type x y z ix iy iz flow_delta_displacement grad_box_change 
 3870 2 9.91111 4.76718 0.783338 0 -1 0 -4.11097 0 
 701 1 7.21904 1.54288 2.8729 0 0 0 -4.59511 0 
 2399 1 4.75071 8.43252 1.38804 0 0 0 0.666556 0 
