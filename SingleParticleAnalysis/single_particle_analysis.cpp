@@ -436,10 +436,13 @@ vector<Particle> Configuration_ParticleDynamic::pick_cross_gradient_boundary_par
 
 void Configuration_ParticleDynamic::to_file_MSD(std::string fname)
 {
-	vector<double> _vec_msd(get_particle_num());
-	vector<double> _vec_dx(get_particle_num());
-	vector<double> _vec_dy(get_particle_num());
-	vector<double> _vec_dz(get_particle_num());
+	vector<double> _vec_msd(get_particle().size());
+	vector<double> _vec_dx(get_particle().size());
+	vector<double> _vec_dy(get_particle().size());
+	vector<double> _vec_dz(get_particle().size());
+	vector<double> _vec_msdx(get_particle().size());
+	vector<double> _vec_msdy(get_particle().size());
+	vector<double> _vec_msdz(get_particle().size());
 	//vector<double> _vec_msd_nonAffine(get_particle_num());
 	bool flag_same_seq = true;
 
@@ -452,7 +455,9 @@ void Configuration_ParticleDynamic::to_file_MSD(std::string fname)
 			_vec_dx[i] = msd[i].dx;
 			_vec_dy[i] = msd[i].dy;
 			_vec_dz[i] = msd[i].dz;
-
+			_vec_msdx[i] = msd[i].MSD_x;
+			_vec_msdy[i] = msd[i].MSD_y;
+			_vec_msdz[i] = msd[i].MSD_z;
 		}
 		else
 		{
@@ -461,18 +466,26 @@ void Configuration_ParticleDynamic::to_file_MSD(std::string fname)
 			_vec_dx[i] = msd[i].dx;
 			_vec_dy[i] = msd[i].dy;
 			_vec_dz[i] = msd[i].dz;
+			_vec_msdx[i] = msd[i].MSD_x;
+			_vec_msdy[i] = msd[i].MSD_y;
+			_vec_msdz[i] = msd[i].MSD_z;
 		}
 
 	}
 	if (flag_same_seq)
 	{
-		to_dump(fname, { "msd","dx","dy","dz" }, { _vec_msd,_vec_dx,_vec_dy,_vec_dz });
+		to_dump(fname,
+			{ "msd","dx","dy","dz","dx2","dy2","dz2" },
+			{ _vec_msd,_vec_dx,_vec_dy,_vec_dz,_vec_msdx,_vec_msdy,_vec_msdz });
 	}
 	else
 	{
 		string warning = "#WARNING: seq of vec_msd and vec_particle not match";
 		std::clog << warning << endl;
-		to_dump(fname, { "msd","dx","dy","dz" }, { _vec_msd,_vec_dx,_vec_dy,_vec_dz });
+		to_dump(fname,
+			{ "msd","dx","dy","dz","dx2","dy2","dz2" },
+			{ _vec_msd,_vec_dx,_vec_dy,_vec_dz,_vec_msdx,_vec_msdy,_vec_msdz },
+			{ warning });
 	}
 	return;
 }
@@ -483,6 +496,9 @@ void Configuration_ParticleDynamic::to_file_nonAffineMSD(std::string fname)
 	vector<double> _vec_nonAffine_dx(get_particle().size());
 	vector<double> _vec_nonAffine_dy(get_particle().size());
 	vector<double> _vec_nonAffine_dz(get_particle().size());
+	vector<double> _vec_msd_nonAffine_x(get_particle().size());
+	vector<double> _vec_msd_nonAffine_y(get_particle().size());
+	vector<double> _vec_msd_nonAffine_z(get_particle().size());
 	bool flag_same_seq = true;
 
 	for (size_t i = 0; i < get_particle().size(); i++)
@@ -494,7 +510,9 @@ void Configuration_ParticleDynamic::to_file_nonAffineMSD(std::string fname)
 			_vec_nonAffine_dx[i] = msd_nonAffine[i].dx;
 			_vec_nonAffine_dy[i] = msd_nonAffine[i].dy;
 			_vec_nonAffine_dz[i] = msd_nonAffine[i].dz;
-
+			_vec_msd_nonAffine_x[i] = msd_nonAffine[i].MSD_x;
+			_vec_msd_nonAffine_y[i] = msd_nonAffine[i].MSD_y;
+			_vec_msd_nonAffine_z[i] = msd_nonAffine[i].MSD_z;
 		}
 		else
 		{
@@ -503,17 +521,25 @@ void Configuration_ParticleDynamic::to_file_nonAffineMSD(std::string fname)
 			_vec_nonAffine_dx[i] = msd_nonAffine[i].dx;
 			_vec_nonAffine_dy[i] = msd_nonAffine[i].dy;
 			_vec_nonAffine_dz[i] = msd_nonAffine[i].dz;
+			_vec_msd_nonAffine_x[i] = msd_nonAffine[i].MSD_x;
+			_vec_msd_nonAffine_y[i] = msd_nonAffine[i].MSD_y;
+			_vec_msd_nonAffine_z[i] = msd_nonAffine[i].MSD_z;
 		}
 	}
 	if (flag_same_seq)
 	{
-		to_dump(fname, { "msd_nonAffine" }, { _vec_msd_nonAffine, _vec_nonAffine_dx,_vec_nonAffine_dy,_vec_nonAffine_dz });
+		to_dump(fname,
+			{ "msd_nonAffine","dx","dy","dz","dx2","dy2","dz2" },
+			{ _vec_msd_nonAffine, _vec_nonAffine_dx,_vec_nonAffine_dy,_vec_nonAffine_dz,_vec_msd_nonAffine_x,_vec_msd_nonAffine_y,_vec_msd_nonAffine_z });
 	}
 	else
 	{
 		string warning = "#WARNING: seq of vec_msd_nonAffine and vec_particle not match";
 		std::clog << warning << endl;
-		to_dump(fname, { "msd_nonAffine" "dx","dy","dz" }, { _vec_msd_nonAffine, _vec_nonAffine_dx,_vec_nonAffine_dy,_vec_nonAffine_dz }, { warning });
+		to_dump(fname,
+			{ "msd_nonAffine","dx","dy","dz","dx2","dy2","dz2" },
+			{ _vec_msd_nonAffine, _vec_nonAffine_dx,_vec_nonAffine_dy,_vec_nonAffine_dz,_vec_msd_nonAffine_x,_vec_msd_nonAffine_y,_vec_msd_nonAffine_z },
+			{ warning });
 	}
 	return;
 }
