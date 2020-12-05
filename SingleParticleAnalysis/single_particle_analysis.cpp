@@ -155,13 +155,13 @@ void Configuration_ParticleDynamic::compute_shear_MSDnonAffine(const Configurati
 		switch (shear_direction)
 		{
 		case Configuration_ParticleDynamic::ShearDirection::xy:
-			drx -= p_pa.ry * shear_rate * dt;
+			drx -= (p_pa.ry - ly / 2.) * shear_rate * dt;
 			break;
 		case Configuration_ParticleDynamic::ShearDirection::xz:
-			drx -= p_pa.rz * shear_rate * dt;
+			drx -= (p_pa.rz - lz / 2.) * shear_rate * dt;
 			break;
 		case Configuration_ParticleDynamic::ShearDirection::yz:
-			dry -= p_pa.rz * shear_rate * dt;
+			dry -= (p_pa.rz - lz / 2.) * shear_rate * dt;
 			break;
 		default:
 			break;
@@ -253,13 +253,13 @@ void Configuration_ParticleDynamic::compute_shear_MSDnonAffine_t0(const Configur
 		switch (shear_direction)
 		{
 		case Configuration_ParticleDynamic::ShearDirection::xy:
-			drx -= p_pa_t0.ry * shear_rate * dt;
+			drx -= (p_pa_t0.ry - ly / 2.) * shear_rate * dt;
 			break;
 		case Configuration_ParticleDynamic::ShearDirection::xz:
-			drx -= p_pa_t0.rz * shear_rate * dt;
+			drx -= (p_pa_t0.rz - lz / 2.) * shear_rate * dt;
 			break;
 		case Configuration_ParticleDynamic::ShearDirection::yz:
-			dry -= p_pa_t0.rz * shear_rate * dt;
+			dry -= (p_pa_t0.rz - lz / 2.) * shear_rate * dt;
 			break;
 		default:
 			break;

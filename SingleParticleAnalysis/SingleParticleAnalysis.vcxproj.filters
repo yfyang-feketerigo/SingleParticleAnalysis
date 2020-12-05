@@ -79,9 +79,6 @@
     <None Include="PaAn_Settings.json">
       <Filter>资源文件</Filter>
     </None>
-    <None Include="rmCrossBox.py">
-      <Filter>资源文件</Filter>
-    </None>
     <None Include="SPA.sh">
       <Filter>资源文件</Filter>
     </None>

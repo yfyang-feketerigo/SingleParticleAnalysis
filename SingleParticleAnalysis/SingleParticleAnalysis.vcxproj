@@ -179,7 +179,6 @@
     <None Include="data.T0.42.Equi" />
     <None Include="data.T0.42.preEqui" />
     <None Include="PaAn_Settings.json" />
-    <None Include="rmCrossBox.py" />
     <None Include="SPA.sh" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
