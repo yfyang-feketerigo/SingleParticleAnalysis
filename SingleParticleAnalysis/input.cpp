@@ -1,3 +1,4 @@
+//2020.12.16, new verison add function: custom delimiter
 #include "input.h"
 
 
@@ -111,7 +112,7 @@ size_t Input::move_to_line(size_t _line)
 	return linePointer = _line;
 }
 
-size_t Input::read_line_data()
+size_t Input::read_line_data(char delimiter, bool skip_empty)
 {
 	data.clear();
 	string line;
@@ -128,19 +129,25 @@ size_t Input::read_line_data()
 			do
 			{
 				getline(infile, line);
-				if (line.empty())
+				if (skip_empty)
 				{
-					cerr << "skip reading EMPTY data line " << linePointer << endl;
-					linePointer += 1;
+					if (line.empty())
+					{
+						cerr << "skip reading EMPTY data line " << linePointer << endl;
+						linePointer += 1;
+					}
 				}
 			} while (line.empty() && !infile.eof());
 			istringstream ss(line);
-			while (!ss.eof())
+			string str_num;
+			while (std::getline(ss, str_num, delimiter))
+				data.push_back(std::stod(str_num));
+			/*while (!ss.eof())
 			{
 				double tmp;
 				ss >> tmp;
 				data.push_back(tmp);
-			}
+			}*/
 		}
 		linePointer += 1;
 		return data.size();

@@ -1,9 +1,11 @@
+//2020.12.16, new verison add function: custom delimiter
 #pragma once
 #include <fstream>
 #include <iostream>
 #include <string>
 #include <vector>
 #include <sstream>
+#include <limits>
 //using namespace std;
 
 using std::string;
@@ -18,7 +20,7 @@ std::string& trim(string& s);
 class Input
 {
 private:
-	static const int LINE_MAX = 2147483647;
+	static const auto LINE_MAX = std::numeric_limits<std::streamsize>::max();
 	ifstream infile;
 	string fname;
 	size_t headline;
@@ -54,7 +56,8 @@ public:
 	void close_file();
 	void skiphead();
 	size_t move_to_line(size_t _line);
-	size_t read_line_data();
+	//size_t read_line_data();
+	size_t read_line_data(char delimiter = ' ', bool skip_empty = true);
 	size_t read_line_str(size_t _num);
 	size_t skip_line(size_t _num);
 

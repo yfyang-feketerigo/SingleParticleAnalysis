@@ -210,7 +210,14 @@ int main()
 	{
 		cout << e << endl;
 	}
-
+	catch (const std::exception& e)
+	{
+		cout << "An exception occurred. Exception: " << e.what() << endl;
+	}
+	catch (...)
+	{
+		cout << "An undifine exception occurred." << endl;
+	}
 }
 
 void mkdir(std::string path)
