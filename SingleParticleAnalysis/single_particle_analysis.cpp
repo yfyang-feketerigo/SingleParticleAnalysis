@@ -26,13 +26,13 @@ void Configuration_StaticStructure::compute_CN(double r_cut)
 			double dr = sqrt(dx * dx + dy * dy + dz * dz);
 			if (dr < r_cut)
 			{
-				coordination_number[i].CN++;
+				coordination_number[i].cn++;
 			}
 		}
 	}
 	for (size_t i = 0; i < coordination_number.size(); i++)
 	{
-		coordination_number[i].CN -= 1;
+		coordination_number[i].cn -= 1;
 	}
 	return;
 }
@@ -46,8 +46,8 @@ const CN& Configuration_StaticStructure::get_CN(size_t _id) const
 			return coordination_number[i];
 		}
 	}
-	cerr << "particle " << _id << " CN not found!" << endl;
-	throw ("particle " + std::to_string(_id) + " CN not found!");
+	cerr << "particle " << _id << " cn not found!" << endl;
+	throw ("particle " + std::to_string(_id) + " cn not found!");
 }
 
 void Configuration_StaticStructure::CN_to_file(std::string fname)
@@ -60,25 +60,25 @@ void Configuration_StaticStructure::CN_to_file(std::string fname)
 		if (get_particle()[i].id == coordination_number[i].particle_id)
 		{
 			flag_same_seq = flag_same_seq && true;
-			_vec_CN[i] = coordination_number[i].CN;
+			_vec_CN[i] = coordination_number[i].cn;
 
 		}
 		else
 		{
 			flag_same_seq = flag_same_seq && false;
-			_vec_CN[i] = get_CN(get_particle()[i].id).CN;
+			_vec_CN[i] = get_CN(get_particle()[i].id).cn;
 		}
 
 	}
 	if (flag_same_seq)
 	{
-		to_dump(fname, { "CN" }, { _vec_CN });
+		to_dump(fname, { "cn" }, { _vec_CN });
 	}
 	else
 	{
 		string warning = "#WARNING: seq of vec_CN and vec_particle not match";
 		std::clog << warning << endl;
-		to_dump(fname, { "CN" }, { _vec_CN }, { warning });
+		to_dump(fname, { "cn" }, { _vec_CN }, { warning });
 	}
 	return;
 }

@@ -6,7 +6,7 @@ ITEM: BOX BOUNDS xy xz yz pp pp pp
 0 19.31 0
 0 19.31 0
 0 9.655 0
-ITEM: ATOMS id type x y z ix iy iz CN 
+ITEM: ATOMS id type x y z ix iy iz cn 
 964 1 2.28793 0.661588 0.408533 0 1 1 0 
 3378 1 1.08157 0.512801 0.379974 1 1 1 5 
 486 1 1.60101 0.716708 1.23634 0 1 1 3 

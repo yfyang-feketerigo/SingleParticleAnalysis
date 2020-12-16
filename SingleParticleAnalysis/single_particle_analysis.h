@@ -15,7 +15,7 @@ const double _STEP_TIME = 0.0025;
 struct CN
 {
 	size_t particle_id;
-	double CN;
+	double cn;
 };
 class Configuration_StaticStructure :public Configuration
 {

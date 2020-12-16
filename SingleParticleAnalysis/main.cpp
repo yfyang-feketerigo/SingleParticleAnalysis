@@ -71,7 +71,7 @@ int main()
 		bool flag_MSDnonAffine_ave_gradient = root["MSDnonAffine_ave_gradient"].asBool();
 		bool flag_computeFlowDisplacement = root["computeFlowDisplacement"].asBool();
 		bool flag_computeFlowAveVelocity = root["computeFlowAveVelocity"].asBool();
-		string CNdir = output_path + "CN/";
+		string CNdir = output_path + "cn/";
 		if (flag_CN) mkdir(CNdir);
 
 		string MSDdir = output_path + "MSD/";
@@ -105,7 +105,7 @@ int main()
 		if (flag_CN)
 		{
 			config_equi.compute_CN(CN_rcut);
-			config_equi.CN_to_file(CNdir + "CN.0");
+			config_equi.CN_to_file(CNdir + "cn.0");
 		}
 		vector<double> y_sum(config_equi.get_particle().size(), 0);
 		vector<double> x_sum(config_equi.get_particle().size(), 0);
@@ -130,7 +130,7 @@ int main()
 			if (flag_CN)
 			{
 				config_t.compute_CN(CN_rcut);
-				config_t.CN_to_file(CNdir + "CN." + str_istep);
+				config_t.CN_to_file(CNdir + "cn." + str_istep);
 			}
 
 			if (flag_MSD)
