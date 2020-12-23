@@ -72,6 +72,8 @@ struct Flow_Ave_Velocity
 	size_t particle_id;
 	double ave_v;
 	int grad_box_change;
+	size_t last_step;
+	size_t now_step;
 };
 
 class Configuration_ParticleDynamic :public Configuration_StaticStructure

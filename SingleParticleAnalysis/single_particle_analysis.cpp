@@ -337,6 +337,8 @@ void Configuration_ParticleDynamic::compute_shear_flow_ave_velocity(const Config
 		const Particle& p_pa = get_particle()[i];
 		const Particle& p_pa_t0 = config_t0.get_particle(p_pa.id);
 		flow_ave_velocity[i].particle_id = p_pa.id;
+		flow_ave_velocity[i].last_step = config_t0.get_timestep();
+		flow_ave_velocity[i].now_step = config_t0.get_timestep();
 		switch (shear_direction)
 		{
 		case Configuration_ParticleDynamic::ShearDirection::xy:
