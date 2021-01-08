@@ -157,6 +157,7 @@ Configuration::Configuration(std::string config_file, BoxType _boxtype, PairStyl
 	{
 		in_data.read_line_data();
 		Particle& p_particle = seek_id(vec_particle, (size_t)in_data.get_data()[0]);
+		p_particle.vx = in_data.get_data()[1];
 		p_particle.vy = in_data.get_data()[2];
 		p_particle.vz = in_data.get_data()[3];
 	}
