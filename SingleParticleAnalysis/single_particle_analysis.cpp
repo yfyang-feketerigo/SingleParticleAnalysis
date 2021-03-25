@@ -72,13 +72,13 @@ void Configuration_StaticStructure::CN_to_file(std::string fname)
 	}
 	if (flag_same_seq)
 	{
-		to_dump(fname, { "cn" }, { _vec_CN });
+		para_to_dump(fname, { "cn" }, { _vec_CN });
 	}
 	else
 	{
 		string warning = "#WARNING: seq of vec_CN and vec_particle not match";
 		std::clog << warning << endl;
-		to_dump(fname, { "cn" }, { _vec_CN }, { warning });
+		para_to_dump(fname, { "cn" }, { _vec_CN }, { warning });
 	}
 	return;
 }
@@ -100,9 +100,9 @@ void Configuration_ParticleDynamic::compute_msd(const Configuration& config_t0)
 	{
 		const Particle& p_pa = get_particle()[i];
 		const Particle& p_pa_t0 = config_t0.get_particle(p_pa.id);
-		double drx = p_pa.rx + p_pa.box_x * lx - p_pa_t0.rx - p_pa_t0.box_x * lx_t0;
-		double dry = p_pa.ry + p_pa.box_y * ly - p_pa_t0.ry - p_pa_t0.box_y * ly_t0;
-		double drz = p_pa.rz + p_pa.box_z * lz - p_pa_t0.rz - p_pa_t0.box_z * lz_t0;
+		double drx = this->get_rx_real(p_pa) - config_t0.get_rx_real(p_pa_t0);//p_pa.rx + p_pa.box_x * lx - p_pa_t0.rx - p_pa_t0.box_x * lx_t0;
+		double dry = this->get_ry_real(p_pa) - config_t0.get_ry_real(p_pa_t0);//p_pa.ry + p_pa.box_y * ly - p_pa_t0.ry - p_pa_t0.box_y * ly_t0;
+		double drz = this->get_rz_real(p_pa) - config_t0.get_rz_real(p_pa_t0);// p_pa.rz + p_pa.box_z * lz - p_pa_t0.rz - p_pa_t0.box_z * lz_t0;
 		double _msd = drx * drx + dry * dry + drz * drz;
 		msd[i].particle_id = p_pa.id;
 		msd[i].dx = drx;
@@ -148,9 +148,9 @@ void Configuration_ParticleDynamic::compute_shear_MSDnonAffine(const Configurati
 	{
 		const Particle& p_pa = get_particle()[i];
 		const Particle& p_pa_t0 = config_t0.get_particle(p_pa.id);
-		double drx = p_pa.rx + p_pa.box_x * lx - p_pa_t0.rx - p_pa_t0.box_x * lx_t0;
-		double dry = p_pa.ry + p_pa.box_y * ly - p_pa_t0.ry - p_pa_t0.box_y * ly_t0;
-		double drz = p_pa.rz + p_pa.box_z * lz - p_pa_t0.rz - p_pa_t0.box_z * lz_t0;
+		double drx = this->get_rx_real(p_pa) - config_t0.get_rx_real(p_pa_t0);//p_pa.rx + p_pa.box_x * lx - p_pa_t0.rx - p_pa_t0.box_x * lx_t0;
+		double dry = this->get_ry_real(p_pa) - config_t0.get_ry_real(p_pa_t0);//p_pa.ry + p_pa.box_y * ly - p_pa_t0.ry - p_pa_t0.box_y * ly_t0;
+		double drz = this->get_rz_real(p_pa) - config_t0.get_rz_real(p_pa_t0);//p_pa.rz + p_pa.box_z * lz - p_pa_t0.rz - p_pa_t0.box_z * lz_t0;
 
 		switch (shear_direction)
 		{
@@ -197,9 +197,9 @@ void Configuration_ParticleDynamic::compute_shear_MSDnonAffine(const Configurati
 	{
 		const Particle& p_pa = get_particle()[i];
 		const Particle& p_pa_t0 = config_t0.get_particle(p_pa.id);
-		double drx = p_pa.rx + p_pa.box_x * lx - p_pa_t0.rx - p_pa_t0.box_x * lx_t0;
-		double dry = p_pa.ry + p_pa.box_y * ly - p_pa_t0.ry - p_pa_t0.box_y * ly_t0;
-		double drz = p_pa.rz + p_pa.box_z * lz - p_pa_t0.rz - p_pa_t0.box_z * lz_t0;
+		double drx = this->get_rx_real(p_pa) - config_t0.get_rx_real(p_pa_t0);//p_pa.rx + p_pa.box_x * lx - p_pa_t0.rx - p_pa_t0.box_x * lx_t0;
+		double dry = this->get_ry_real(p_pa) - config_t0.get_ry_real(p_pa_t0); //p_pa.ry + p_pa.box_y * ly - p_pa_t0.ry - p_pa_t0.box_y * ly_t0;
+		double drz = this->get_rz_real(p_pa) - config_t0.get_rz_real(p_pa_t0); //p_pa.rz + p_pa.box_z * lz - p_pa_t0.rz - p_pa_t0.box_z * lz_t0;
 
 		switch (shear_direction)
 		{
@@ -246,9 +246,9 @@ void Configuration_ParticleDynamic::compute_shear_MSDnonAffine_t0(const Configur
 	{
 		const Particle& p_pa = get_particle()[i];
 		const Particle& p_pa_t0 = config_t0.get_particle(p_pa.id);
-		double drx = p_pa.rx + p_pa.box_x * lx - p_pa_t0.rx - p_pa_t0.box_x * lx_t0;
-		double dry = p_pa.ry + p_pa.box_y * ly - p_pa_t0.ry - p_pa_t0.box_y * ly_t0;
-		double drz = p_pa.rz + p_pa.box_z * lz - p_pa_t0.rz - p_pa_t0.box_z * lz_t0;
+		double drx = this->get_rx_real(p_pa) - config_t0.get_rx_real(p_pa_t0); //p_pa.rx + p_pa.box_x * lx - p_pa_t0.rx - p_pa_t0.box_x * lx_t0;
+		double dry = this->get_ry_real(p_pa) - config_t0.get_ry_real(p_pa_t0); //p_pa.ry + p_pa.box_y * ly - p_pa_t0.ry - p_pa_t0.box_y * ly_t0;
+		double drz = this->get_rz_real(p_pa) - config_t0.get_rz_real(p_pa_t0); //p_pa.rz + p_pa.box_z * lz - p_pa_t0.rz - p_pa_t0.box_z * lz_t0;
 
 		switch (shear_direction)
 		{
@@ -301,15 +301,15 @@ void Configuration_ParticleDynamic::compute_shear_flow_displacement(const Config
 		switch (shear_direction)
 		{
 		case Configuration_ParticleDynamic::ShearDirection::xy:
-			flow_delta_displacement[i].dr = p_pa.rx + p_pa.box_x * lx - p_pa_t0.rx - p_pa_t0.box_x * lx_t0;
+			flow_delta_displacement[i].dr = this->get_rx_real(p_pa) - config_t0.get_rx_real(p_pa_t0); //p_pa.rx + p_pa.box_x * lx - p_pa_t0.rx - p_pa_t0.box_x * lx_t0;
 			flow_delta_displacement[i].grad_box_change = p_pa.box_y - p_pa_t0.box_y;
 			break;
 		case Configuration_ParticleDynamic::ShearDirection::xz:
-			flow_delta_displacement[i].dr = p_pa.rx + p_pa.box_x * lx - p_pa_t0.rx - p_pa_t0.box_x * lx_t0;
+			flow_delta_displacement[i].dr = this->get_rx_real(p_pa) - config_t0.get_rx_real(p_pa_t0); //p_pa.rx + p_pa.box_x * lx - p_pa_t0.rx - p_pa_t0.box_x * lx_t0;
 			flow_delta_displacement[i].grad_box_change = p_pa.box_z - p_pa_t0.box_z;
 			break;
 		case Configuration_ParticleDynamic::ShearDirection::yz:
-			flow_delta_displacement[i].dr = p_pa.ry + p_pa.box_y * ly - p_pa_t0.ry - p_pa_t0.box_y * ly_t0;
+			flow_delta_displacement[i].dr = this->get_ry_real(p_pa) - config_t0.get_ry_real(p_pa_t0);//p_pa.ry + p_pa.box_y * ly - p_pa_t0.ry - p_pa_t0.box_y * ly_t0;
 			flow_delta_displacement[i].grad_box_change = p_pa.box_z - p_pa_t0.box_z;
 			break;
 		default:
@@ -339,18 +339,19 @@ void Configuration_ParticleDynamic::compute_shear_flow_ave_velocity(const Config
 		flow_ave_velocity[i].particle_id = p_pa.id;
 		flow_ave_velocity[i].last_step = config_t0.get_timestep();
 		flow_ave_velocity[i].now_step = config_t0.get_timestep();
+		double _ave_v = 0;
 		switch (shear_direction)
 		{
 		case Configuration_ParticleDynamic::ShearDirection::xy:
-			flow_ave_velocity[i].ave_v = p_pa.rx + p_pa.box_x * lx - p_pa_t0.rx - p_pa_t0.box_x * lx_t0;
+			flow_ave_velocity[i].ave_v = this->get_rx_real(p_pa) - config_t0.get_rx_real(p_pa_t0);//p_pa.rx + p_pa.box_x * lx - p_pa_t0.rx - p_pa_t0.box_x * lx_t0;
 			flow_ave_velocity[i].grad_box_change = p_pa.box_y - p_pa_t0.box_y;
 			break;
 		case Configuration_ParticleDynamic::ShearDirection::xz:
-			flow_ave_velocity[i].ave_v = p_pa.rx + p_pa.box_x * lx - p_pa_t0.rx - p_pa_t0.box_x * lx_t0;
+			flow_ave_velocity[i].ave_v = this->get_rx_real(p_pa) - config_t0.get_rx_real(p_pa_t0);//p_pa.rx + p_pa.box_x * lx - p_pa_t0.rx - p_pa_t0.box_x * lx_t0;
 			flow_ave_velocity[i].grad_box_change = p_pa.box_z - p_pa_t0.box_z;
 			break;
 		case Configuration_ParticleDynamic::ShearDirection::yz:
-			flow_ave_velocity[i].ave_v = p_pa.ry + p_pa.box_y * ly - p_pa_t0.ry - p_pa_t0.box_y * ly_t0;
+			flow_ave_velocity[i].ave_v = this->get_ry_real(p_pa) - config_t0.get_ry_real(p_pa_t0);//p_pa.ry + p_pa.box_y * ly - p_pa_t0.ry - p_pa_t0.box_y * ly_t0;
 			flow_ave_velocity[i].grad_box_change = p_pa.box_z - p_pa_t0.box_z;
 			break;
 		default:
@@ -476,7 +477,7 @@ void Configuration_ParticleDynamic::to_file_MSD(std::string fname)
 	}
 	if (flag_same_seq)
 	{
-		to_dump(fname,
+		para_to_dump(fname,
 			{ "msd","dx","dy","dz","dx2","dy2","dz2" },
 			{ _vec_msd,_vec_dx,_vec_dy,_vec_dz,_vec_msdx,_vec_msdy,_vec_msdz });
 	}
@@ -484,7 +485,7 @@ void Configuration_ParticleDynamic::to_file_MSD(std::string fname)
 	{
 		string warning = "#WARNING: seq of vec_msd and vec_particle not match";
 		std::clog << warning << endl;
-		to_dump(fname,
+		para_to_dump(fname,
 			{ "msd","dx","dy","dz","dx2","dy2","dz2" },
 			{ _vec_msd,_vec_dx,_vec_dy,_vec_dz,_vec_msdx,_vec_msdy,_vec_msdz },
 			{ warning });
@@ -530,7 +531,7 @@ void Configuration_ParticleDynamic::to_file_nonAffineMSD(std::string fname)
 	}
 	if (flag_same_seq)
 	{
-		to_dump(fname,
+		para_to_dump(fname,
 			{ "msd_nonAffine","dx","dy","dz","dx2","dy2","dz2" },
 			{ _vec_msd_nonAffine, _vec_nonAffine_dx,_vec_nonAffine_dy,_vec_nonAffine_dz,_vec_msd_nonAffine_x,_vec_msd_nonAffine_y,_vec_msd_nonAffine_z });
 	}
@@ -538,7 +539,7 @@ void Configuration_ParticleDynamic::to_file_nonAffineMSD(std::string fname)
 	{
 		string warning = "#WARNING: seq of vec_msd_nonAffine and vec_particle not match";
 		std::clog << warning << endl;
-		to_dump(fname,
+		para_to_dump(fname,
 			{ "msd_nonAffine","dx","dy","dz","dx2","dy2","dz2" },
 			{ _vec_msd_nonAffine, _vec_nonAffine_dx,_vec_nonAffine_dy,_vec_nonAffine_dz,_vec_msd_nonAffine_x,_vec_msd_nonAffine_y,_vec_msd_nonAffine_z },
 			{ warning });
@@ -548,7 +549,6 @@ void Configuration_ParticleDynamic::to_file_nonAffineMSD(std::string fname)
 
 void Configuration_ParticleDynamic::to_file_flow_displacement(std::string fname)
 {
-	//todo ÉÐÎ´²âÊÔ
 	vector<double> _vec_flow_displacement(flow_delta_displacement.size());
 	vector<double> _vec_flow_grad_box_change(flow_delta_displacement.size());
 	bool flag_same_seq = true;
@@ -572,13 +572,13 @@ void Configuration_ParticleDynamic::to_file_flow_displacement(std::string fname)
 	step_info += " now_step: " + to_string(flow_delta_displacement[0].now_step);
 	if (flag_same_seq)
 	{
-		to_dump(fname, { "flow_delta_displacement", "grad_box_change" }, { _vec_flow_displacement, _vec_flow_grad_box_change }, { step_info });
+		para_to_dump(fname, { "flow_delta_displacement", "grad_box_change" }, { _vec_flow_displacement, _vec_flow_grad_box_change }, { step_info });
 	}
 	else
 	{
 		string warning = "#WARNING: seq of vec_flow_displacement and vec_particle not match";
 		std::clog << warning << endl;
-		to_dump(fname, { "flow_delta_displacement", "grad_box_change" }, { _vec_flow_displacement, _vec_flow_grad_box_change }, { warning,step_info });
+		para_to_dump(fname, { "flow_delta_displacement", "grad_box_change" }, { _vec_flow_displacement, _vec_flow_grad_box_change }, { warning,step_info });
 	}
 }
 /*
@@ -623,7 +623,6 @@ void Configuration_ParticleDynamic::to_file_flow_displacement_non_cross_box(std:
 */
 void Configuration_ParticleDynamic::to_file_flow_ave_velocity(std::string fname)
 {
-	//todo ÉÐÎ´²âÊÔ
 	vector<double> _vec_flow_ave_velocity(flow_ave_velocity.size());
 	vector<double> _vec_flow_grad_box_change(flow_ave_velocity.size());
 	bool flag_same_seq = true;
@@ -645,13 +644,13 @@ void Configuration_ParticleDynamic::to_file_flow_ave_velocity(std::string fname)
 	}
 	if (flag_same_seq)
 	{
-		to_dump(fname, { "flow_delta_displacement", "grad_box_change" }, { _vec_flow_ave_velocity, _vec_flow_grad_box_change });
+		para_to_dump(fname, { "flow_delta_displacement", "grad_box_change" }, { _vec_flow_ave_velocity, _vec_flow_grad_box_change });
 	}
 	else
 	{
 		string warning = "#WARNING: seq of vec_flow_ave_veclocity and vec_particle not match";
 		std::clog << warning << endl;
-		to_dump(fname, { "flow_ave_velocity" , "grad_box_change" }, { _vec_flow_ave_velocity, _vec_flow_grad_box_change }, { warning });
+		para_to_dump(fname, { "flow_ave_velocity" , "grad_box_change" }, { _vec_flow_ave_velocity, _vec_flow_grad_box_change }, { warning });
 	}
 }
 

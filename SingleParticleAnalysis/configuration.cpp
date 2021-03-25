@@ -241,6 +241,68 @@ void Configuration::to_data(string fname, BoxType _boxtype)
 	return;
 }
 
-//template <typename T>
-//void Configuration::to_dump(string fname, std::initializer_list<string> add_para_name, std::initializer_list<vector<T>> add_para, vector<string> comments)
+void Configuration::to_dump(string ofname, string opath, string style) const
+{
+	clog << "converting data file to dump file..." << endl;
+	clog << "dump style: " << style << endl;
+	clog << "dump path: " << opath << endl;
+	clog << "dump file name: " << ofname << endl;
+	if (!boost::filesystem::exists(opath))
+	{
+		boost::filesystem::create_directories(opath);
+	}
+	string full_opath = opath + ofname;
 
+	ofstream ofile;
+	ofile.open(full_opath);
+	if (!ofile.is_open())
+	{
+		cerr << full_opath << " open failed" << endl;
+		throw (full_opath + " open failed");
+	}
+
+	double lx = xhi - xlo;
+	double ly = yhi - ylo;
+	double lz = zhi - zlo;
+	if (style == "yjruan")
+	{
+		ofile << "ITEM: TIMESTEP" << endl;
+		ofile << timestep << endl;
+		ofile << "ITEM: NUMBER OF ATOMS" << endl;
+		ofile << particle_num << endl;
+		ofile << "ITME: BOX BOUNDS xy xz yz pp pp pp" << endl;
+		ofile.precision(15);
+
+		double xlo_bound = xlo + std::min({ 0.0, xy, xz, xy + xz });
+		double xhi_bound = xhi + std::max({ 0.0, xy, xz, xy + xz });
+
+		double ylo_bound = ylo + std::min({ 0.0, yz });
+		double yhi_bound = yhi + std::max({ 0.0, yz });
+
+		double zlo_bound = zlo;
+		double zhi_bound = zhi;
+
+		ofile << xlo_bound << " " << xhi_bound << " " << xy << endl;
+		ofile << ylo_bound << " " << yhi_bound << " " << xz << endl;
+		ofile << zlo_bound << " " << zhi_bound << " " << yz << endl;
+		ofile << "ITEM: ATOMES id xu yu zu" << endl;
+		for (size_t i = 0; i < vec_particle.size(); i++)
+		{
+			const Particle& p_pa = vec_particle[i];
+			double xu = get_rx_real(p_pa);
+			double yu = get_ry_real(p_pa);
+			double zu = get_rz_real(p_pa);
+			size_t id = p_pa.id;
+			ofile << id << " ";
+			ofile << xu << " ";
+			ofile << yu << " ";
+			ofile << zu << " ";
+			ofile << endl;
+		}
+		return;
+	}
+
+	cerr << "wrong dump style: " << style << endl;
+	throw ("wrong dump style: " + style);
+
+}
