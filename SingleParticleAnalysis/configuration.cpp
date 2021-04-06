@@ -74,6 +74,7 @@ Configuration::Configuration(std::string config_file, BoxType _boxtype, PairStyl
 		//infile.ignore(LINE_SKIP_MAX, '\n'); //15th line
 
 		size_t total_pair_line = 0;
+		size_t pair_info_space_line = 3;
 		switch (_pairstyle)
 		{
 		case Configuration::PairStyle::single:
@@ -85,11 +86,13 @@ Configuration::Configuration(std::string config_file, BoxType _boxtype, PairStyl
 			break;
 		case Configuration::PairStyle::none:
 			total_pair_line = 0;
+			pair_info_space_line = 0;
 		default:
 			break;
 		}
+
 		string string_pair_info;
-		for (size_t i = 0; i < 3 + total_pair_line; i++)
+		for (size_t i = 0; i < pair_info_space_line + total_pair_line; i++)
 		{
 			getline(infile, string_pair_info);
 			strvec_pair_info.push_back(string_pair_info);
