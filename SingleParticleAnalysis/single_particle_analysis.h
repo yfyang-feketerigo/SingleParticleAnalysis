@@ -94,7 +94,7 @@ public:
 		//Configuration_PrticleDynamic() {};
 	Configuration_ParticleDynamic()
 		:Configuration_StaticStructure() {};
-	Configuration_ParticleDynamic(std::string config_fname, BoxType _boxtype = BoxType::orthogonal, PairStyle _pairstyle = PairStyle::single)
+	Configuration_ParticleDynamic(std::string config_fname, BoxType _boxtype, PairStyle _pairstyle)
 		:Configuration_StaticStructure(config_fname, _boxtype, _pairstyle) { };
 
 	void compute_msd(const Configuration& config_t0);

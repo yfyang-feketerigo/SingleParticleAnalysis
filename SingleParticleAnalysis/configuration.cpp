@@ -83,6 +83,8 @@ Configuration::Configuration(std::string config_file, BoxType _boxtype, PairStyl
 			total_pair_line += type_num;
 			total_pair_line += type_num * (type_num - 1) / 2;
 			break;
+		case Configuration::PairStyle::none:
+			total_pair_line = 0;
 		default:
 			break;
 		}

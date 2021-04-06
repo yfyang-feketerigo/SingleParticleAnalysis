@@ -1,11 +1,14 @@
+
+/*****************************************
+20210406 add new pair style: none, for none pair info data file, modify settings to allow adjust pairsytle
+of equi data file & shear data file
+******************************************/
 #include "single_particle_analysis.h"
 #include "configuration.h"
-//#include "statistics.h"
 #include <iostream>
 #include <string>
 #include <fstream>
 #include <json/json.h>
-//#include <boost/timer.hpp>
 #include <boost/timer/timer.hpp>
 #include <boost/filesystem.hpp>
 
@@ -40,7 +43,50 @@ int main()
 		string data_fpath = root["data_fpath"].asString();
 		string output_path = root["output_path"].asString();
 		string equi_data_fpath = root["equi_data_fpath"].asString();
+
+		string str_equi_data_pairstyle = root["equi_data_pairstyle"].asString();
+		Configuration::PairStyle equi_data_pairstyle = Configuration::PairStyle::none;
+		if (str_equi_data_pairstyle == "single")
+		{
+			equi_data_pairstyle = Configuration::PairStyle::single;
+		}
+		else if (str_equi_data_pairstyle == "pair")
+		{
+			equi_data_pairstyle = Configuration::PairStyle::pair;
+		}
+		else if (str_equi_data_pairstyle == "none")
+		{
+			equi_data_pairstyle = Configuration::PairStyle::none;
+		}
+		else
+		{
+			cerr << ("WRONG pair style: " + str_equi_data_pairstyle) << endl;
+			throw ("WRONG pair style: " + str_equi_data_pairstyle);
+		}
+
+		string str_shear_data_pairstyle = root["shear_data_pairstyle"].asString();
+		Configuration::PairStyle shear_data_pairstyle = Configuration::PairStyle::none;
+		if (str_shear_data_pairstyle == "single")
+		{
+			shear_data_pairstyle = Configuration::PairStyle::single;
+		}
+		else if (str_shear_data_pairstyle == "pair")
+		{
+			shear_data_pairstyle = Configuration::PairStyle::pair;
+		}
+		else if (str_shear_data_pairstyle == "none")
+		{
+			shear_data_pairstyle = Configuration::PairStyle::none;
+		}
+		else
+		{
+			cerr << ("WRONG pair style: " + str_shear_data_pairstyle) << endl;
+			throw ("WRONG pair style: " + str_shear_data_pairstyle);
+		}
+
+
 		double CN_rcut = root["CN_rcut"].asDouble();
+
 
 		boost::filesystem::path boost_path_check(data_fpath);
 		if (!(boost::filesystem::exists(boost_path_check) && boost::filesystem::is_directory(boost_path_check)))
@@ -61,7 +107,7 @@ int main()
 		//string statisticDir = output_path + "stastics/";
 
 		Configuration_StaticStructure config_equi
-		(equi_data_fpath + equi_fname, Configuration::BoxType::orthogonal, Configuration::PairStyle::single);
+		(equi_data_fpath + equi_fname, Configuration::BoxType::orthogonal, equi_data_pairstyle);//Configuration::PairStyle::single);
 		config_equi.set_time_step(0); //平衡态设为0时间点
 
 		bool flag_CN = root["computeCN"].asBool();
@@ -126,7 +172,7 @@ int main()
 			ncounter++;
 			string str_istep = to_string(istep);
 			string config_t_fname = data_fpath + fname_prefix + str_istep + fname_postfix;
-			Configuration_ParticleDynamic config_t(config_t_fname, Configuration::BoxType::tilt);
+			Configuration_ParticleDynamic config_t(config_t_fname, Configuration::BoxType::tilt, shear_data_pairstyle);
 			if (flag_CN)
 			{
 				config_t.compute_CN(CN_rcut);
