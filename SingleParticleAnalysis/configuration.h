@@ -25,7 +25,8 @@ using std::to_string;
 class Configuration
 {
 private:
-	static const size_t LINE_SKIP_MAX = 2147483647;
+	static const auto LINE_SKIP_MAX = std::numeric_limits<std::streamsize>::max();
+	//static const size_t LINE_SKIP_MAX = 2147483647;
 	static const size_t GAP_LINE = 3;		 //description line between position and velocity
 
 	size_t HEAD_INFO_LINE = 0; //data file description information, e.g. mass, pair etc.
