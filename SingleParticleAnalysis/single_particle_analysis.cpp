@@ -148,9 +148,9 @@ void Configuration_ParticleDynamic::compute_shear_MSDnonAffine(const Configurati
 	{
 		const Particle& p_pa = get_particle()[i];
 		const Particle& p_pa_t0 = config_t0.get_particle(p_pa.id);
-		double drx = this->get_rx_real(p_pa) - config_t0.get_rx_real(p_pa_t0);//p_pa.rx + p_pa.box_x * lx - p_pa_t0.rx - p_pa_t0.box_x * lx_t0;
-		double dry = this->get_ry_real(p_pa) - config_t0.get_ry_real(p_pa_t0);//p_pa.ry + p_pa.box_y * ly - p_pa_t0.ry - p_pa_t0.box_y * ly_t0;
-		double drz = this->get_rz_real(p_pa) - config_t0.get_rz_real(p_pa_t0);//p_pa.rz + p_pa.box_z * lz - p_pa_t0.rz - p_pa_t0.box_z * lz_t0;
+		double drx = this->get_rx_real(p_pa) - config_t0.get_rx_real(p_pa_t0);
+		double dry = this->get_ry_real(p_pa) - config_t0.get_ry_real(p_pa_t0);
+		double drz = this->get_rz_real(p_pa) - config_t0.get_rz_real(p_pa_t0);
 
 		switch (shear_direction)
 		{
@@ -197,9 +197,9 @@ void Configuration_ParticleDynamic::compute_shear_MSDnonAffine(const Configurati
 	{
 		const Particle& p_pa = get_particle()[i];
 		const Particle& p_pa_t0 = config_t0.get_particle(p_pa.id);
-		double drx = this->get_rx_real(p_pa) - config_t0.get_rx_real(p_pa_t0);//p_pa.rx + p_pa.box_x * lx - p_pa_t0.rx - p_pa_t0.box_x * lx_t0;
-		double dry = this->get_ry_real(p_pa) - config_t0.get_ry_real(p_pa_t0); //p_pa.ry + p_pa.box_y * ly - p_pa_t0.ry - p_pa_t0.box_y * ly_t0;
-		double drz = this->get_rz_real(p_pa) - config_t0.get_rz_real(p_pa_t0); //p_pa.rz + p_pa.box_z * lz - p_pa_t0.rz - p_pa_t0.box_z * lz_t0;
+		double drx = this->get_rx_real(p_pa) - config_t0.get_rx_real(p_pa_t0);
+		double dry = this->get_ry_real(p_pa) - config_t0.get_ry_real(p_pa_t0);
+		double drz = this->get_rz_real(p_pa) - config_t0.get_rz_real(p_pa_t0);
 
 		switch (shear_direction)
 		{
@@ -246,9 +246,9 @@ void Configuration_ParticleDynamic::compute_shear_MSDnonAffine_t0(const Configur
 	{
 		const Particle& p_pa = get_particle()[i];
 		const Particle& p_pa_t0 = config_t0.get_particle(p_pa.id);
-		double drx = this->get_rx_real(p_pa) - config_t0.get_rx_real(p_pa_t0); //p_pa.rx + p_pa.box_x * lx - p_pa_t0.rx - p_pa_t0.box_x * lx_t0;
-		double dry = this->get_ry_real(p_pa) - config_t0.get_ry_real(p_pa_t0); //p_pa.ry + p_pa.box_y * ly - p_pa_t0.ry - p_pa_t0.box_y * ly_t0;
-		double drz = this->get_rz_real(p_pa) - config_t0.get_rz_real(p_pa_t0); //p_pa.rz + p_pa.box_z * lz - p_pa_t0.rz - p_pa_t0.box_z * lz_t0;
+		double drx = this->get_rx_real(p_pa) - config_t0.get_rx_real(p_pa_t0);
+		double dry = this->get_ry_real(p_pa) - config_t0.get_ry_real(p_pa_t0);
+		double drz = this->get_rz_real(p_pa) - config_t0.get_rz_real(p_pa_t0);
 
 		switch (shear_direction)
 		{
@@ -301,15 +301,15 @@ void Configuration_ParticleDynamic::compute_shear_flow_displacement(const Config
 		switch (shear_direction)
 		{
 		case Configuration_ParticleDynamic::ShearDirection::xy:
-			flow_delta_displacement[i].dr = this->get_rx_real(p_pa) - config_t0.get_rx_real(p_pa_t0); //p_pa.rx + p_pa.box_x * lx - p_pa_t0.rx - p_pa_t0.box_x * lx_t0;
+			flow_delta_displacement[i].dr = this->get_rx_real(p_pa) - config_t0.get_rx_real(p_pa_t0);
 			flow_delta_displacement[i].grad_box_change = p_pa.box_y - p_pa_t0.box_y;
 			break;
 		case Configuration_ParticleDynamic::ShearDirection::xz:
-			flow_delta_displacement[i].dr = this->get_rx_real(p_pa) - config_t0.get_rx_real(p_pa_t0); //p_pa.rx + p_pa.box_x * lx - p_pa_t0.rx - p_pa_t0.box_x * lx_t0;
+			flow_delta_displacement[i].dr = this->get_rx_real(p_pa) - config_t0.get_rx_real(p_pa_t0);
 			flow_delta_displacement[i].grad_box_change = p_pa.box_z - p_pa_t0.box_z;
 			break;
 		case Configuration_ParticleDynamic::ShearDirection::yz:
-			flow_delta_displacement[i].dr = this->get_ry_real(p_pa) - config_t0.get_ry_real(p_pa_t0);//p_pa.ry + p_pa.box_y * ly - p_pa_t0.ry - p_pa_t0.box_y * ly_t0;
+			flow_delta_displacement[i].dr = this->get_ry_real(p_pa) - config_t0.get_ry_real(p_pa_t0);
 			flow_delta_displacement[i].grad_box_change = p_pa.box_z - p_pa_t0.box_z;
 			break;
 		default:
@@ -343,15 +343,15 @@ void Configuration_ParticleDynamic::compute_shear_flow_ave_velocity(const Config
 		switch (shear_direction)
 		{
 		case Configuration_ParticleDynamic::ShearDirection::xy:
-			flow_ave_velocity[i].ave_v = this->get_rx_real(p_pa) - config_t0.get_rx_real(p_pa_t0);//p_pa.rx + p_pa.box_x * lx - p_pa_t0.rx - p_pa_t0.box_x * lx_t0;
+			flow_ave_velocity[i].ave_v = this->get_rx_real(p_pa) - config_t0.get_rx_real(p_pa_t0);
 			flow_ave_velocity[i].grad_box_change = p_pa.box_y - p_pa_t0.box_y;
 			break;
 		case Configuration_ParticleDynamic::ShearDirection::xz:
-			flow_ave_velocity[i].ave_v = this->get_rx_real(p_pa) - config_t0.get_rx_real(p_pa_t0);//p_pa.rx + p_pa.box_x * lx - p_pa_t0.rx - p_pa_t0.box_x * lx_t0;
+			flow_ave_velocity[i].ave_v = this->get_rx_real(p_pa) - config_t0.get_rx_real(p_pa_t0);
 			flow_ave_velocity[i].grad_box_change = p_pa.box_z - p_pa_t0.box_z;
 			break;
 		case Configuration_ParticleDynamic::ShearDirection::yz:
-			flow_ave_velocity[i].ave_v = this->get_ry_real(p_pa) - config_t0.get_ry_real(p_pa_t0);//p_pa.ry + p_pa.box_y * ly - p_pa_t0.ry - p_pa_t0.box_y * ly_t0;
+			flow_ave_velocity[i].ave_v = this->get_ry_real(p_pa) - config_t0.get_ry_real(p_pa_t0);
 			flow_ave_velocity[i].grad_box_change = p_pa.box_z - p_pa_t0.box_z;
 			break;
 		default:

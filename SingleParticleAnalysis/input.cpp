@@ -14,6 +14,9 @@ Input::Input(string _fname, size_t _headline)
 	{
 		while (!infile.eof())
 		{
+			/*
+			* 打开后统计文件总行数
+			*/
 			totalLine += 1;
 			getline(infile, line);
 			if (!line.empty())
@@ -33,6 +36,9 @@ Input::Input(string _fname, size_t _headline)
 
 Input::Input()
 {
+	/*
+	* 默认构造函数
+	*/
 	fname = "default";
 	headline = 0;
 	linePointer = 0;
@@ -43,6 +49,9 @@ Input::Input()
 
 bool Input::open_file()
 {
+	/*
+	* 打开文件
+	*/
 	if (!infile.is_open())
 	{
 		infile.open(fname);
@@ -57,6 +66,9 @@ bool Input::open_file()
 
 void Input::close_file()
 {
+	/*
+	* 关闭文件
+	*/
 	if (infile.is_open())
 	{
 		infile.close();
@@ -73,6 +85,9 @@ void Input::close_file()
 
 void Input::skiphead()
 {
+	/*
+	* 跳过文件头
+	*/
 	if (infile.is_open())
 	{
 		if (linePointer == 0)
@@ -98,6 +113,9 @@ void Input::skiphead()
 
 size_t Input::move_to_line(size_t _line)
 {
+	/*
+	* 移动到某行
+	*/
 	if (_line > totalLine)
 	{
 		cerr << "out of file line range!" << endl;
@@ -114,6 +132,9 @@ size_t Input::move_to_line(size_t _line)
 
 size_t Input::read_line_data(char delimiter, bool skip_empty)
 {
+	/*
+	* 读取一行数据，注意是数字数据
+	*/
 	data.clear();
 	string line;
 	if (infile.is_open())
@@ -142,12 +163,6 @@ size_t Input::read_line_data(char delimiter, bool skip_empty)
 			string str_num;
 			while (std::getline(ss, str_num, delimiter))
 				data.push_back(std::stod(str_num));
-			/*while (!ss.eof())
-			{
-				double tmp;
-				ss >> tmp;
-				data.push_back(tmp);
-			}*/
 		}
 		linePointer += 1;
 		return data.size();
@@ -162,6 +177,9 @@ size_t Input::read_line_data(char delimiter, bool skip_empty)
 
 size_t Input::read_line_str(size_t _num)
 {
+	/*
+	* 读取若干行字符串
+	*/
 	string str_temp;
 	if (!str_data.empty())
 	{
@@ -181,6 +199,9 @@ size_t Input::read_line_str(size_t _num)
 
 size_t Input::skip_line(size_t _num)
 {
+	/*
+	* 跳过若干行
+	*/
 	if (infile.is_open())
 	{
 		for (size_t i = 0; i < _num; i++)
@@ -210,6 +231,9 @@ bool Input::check_EOF() const
 
 string& trim(string& s)
 {
+	/*
+	* 裁剪字符串，去除首尾空格
+	*/
 	if (s.empty())
 		return s;
 	s.erase(0, s.find_first_not_of(' '));

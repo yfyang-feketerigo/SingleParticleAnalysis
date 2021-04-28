@@ -14,6 +14,7 @@ Configuration::Configuration(std::string config_file, BoxType _boxtype, PairStyl
 	if (infile.is_open())
 	{
 		clog << "Processing data file head information..." << endl;
+		//获取时间步信息
 		getline(infile, firstline); //1st line
 		string str_timestep;
 		for (size_t i = firstline.size() - 1; i > 0; i--)
@@ -28,8 +29,8 @@ Configuration::Configuration(std::string config_file, BoxType _boxtype, PairStyl
 			}
 		}
 		timestep = stoull(str_timestep); //string to unsigned long long
-		//cout << timestep << endl;
 
+		//跳过描述信息
 		infile.ignore(LINE_SKIP_MAX, '\n'); //2nd line
 
 		infile >> particle_num;
@@ -42,19 +43,28 @@ Configuration::Configuration(std::string config_file, BoxType _boxtype, PairStyl
 
 		HEAD_INFO_LINE = 5;
 
+		/*
+		* 读入x边界
+		*/
 		infile >> xlo >> xhi;
 		infile.ignore(LINE_SKIP_MAX, '\n'); //6th line
 		HEAD_INFO_LINE++;
 
+		/*
+		* 读入y边界
+		*/
 		infile >> ylo >> yhi;
 		infile.ignore(LINE_SKIP_MAX, '\n'); //7th line
 		HEAD_INFO_LINE++;
 
+		/*
+		* 读入z边界
+		*/
 		infile >> zlo >> zhi;
 		infile.ignore(LINE_SKIP_MAX, '\n'); //8th line
 		HEAD_INFO_LINE++;
 
-		if (_boxtype == BoxType::tilt)
+		if (_boxtype == BoxType::tilt) //三斜盒子的处理
 		{
 			infile >> xy >> xz >> yz;
 			infile.ignore(LINE_SKIP_MAX, '\n'); //9th line
@@ -64,7 +74,7 @@ Configuration::Configuration(std::string config_file, BoxType _boxtype, PairStyl
 		HEAD_INFO_LINE++;
 
 
-		string string_mass_info;
+		string string_mass_info; //读入粒子质量信息
 		for (size_t i = 0; i < 3 + type_num; i++)
 		{
 			getline(infile, string_mass_info);
@@ -75,7 +85,8 @@ Configuration::Configuration(std::string config_file, BoxType _boxtype, PairStyl
 
 		size_t total_pair_line = 0;
 		size_t pair_info_space_line = 3;
-		switch (_pairstyle)
+
+		switch (_pairstyle) //处理粒子势能信息
 		{
 		case Configuration::PairStyle::single:
 			total_pair_line = type_num;
@@ -90,7 +101,6 @@ Configuration::Configuration(std::string config_file, BoxType _boxtype, PairStyl
 		default:
 			break;
 		}
-
 		string string_pair_info;
 		for (size_t i = 0; i < pair_info_space_line + total_pair_line; i++)
 		{
@@ -100,7 +110,7 @@ Configuration::Configuration(std::string config_file, BoxType _boxtype, PairStyl
 		HEAD_INFO_LINE += strvec_pair_info.size();
 
 
-		getline(infile, str_atoms_info);
+		getline(infile, str_atoms_info); //粒子描述信息
 		HEAD_INFO_LINE++;
 		infile.ignore(LINE_SKIP_MAX, '\n');
 		HEAD_INFO_LINE++;
@@ -113,10 +123,13 @@ Configuration::Configuration(std::string config_file, BoxType _boxtype, PairStyl
 	}
 	infile.close();
 
+	/*
+	* 屏幕输出读入的data文件信息，用于校验差错
+	*/
 	clog << firstline << endl;;
 	clog << "Configuration data file " << config_file << " has " << particle_num << " particles" << endl;
 	clog << "Configuration has " << type_num << " particle type(s)" << endl;
-	clog << "Time Step: " << timestep << endl;;
+	clog << "Time Step: " << timestep << endl;
 	for (size_t i = 0; i < strvec_mass_info.size(); i++)
 	{
 		clog << strvec_mass_info[i] << endl;
@@ -138,6 +151,10 @@ Configuration::Configuration(std::string config_file, BoxType _boxtype, PairStyl
 	clog << "File GAP LINE: " << GAP_LINE << endl;
 	Input in_data(config_file, HEAD_INFO_LINE);
 	clog << endl;
+
+	/*
+	* 开始处理粒子坐标信息
+	*/
 	clog << "Reading coordinates..." << endl;
 	in_data.open_file();
 	in_data.skiphead();
@@ -155,8 +172,12 @@ Configuration::Configuration(std::string config_file, BoxType _boxtype, PairStyl
 		vec_particle[i].box_z = (int)in_data.get_data()[7];
 	}
 
-	in_data.skip_line(GAP_LINE);
+	in_data.skip_line(GAP_LINE); //跳过坐标与速度间空行
 	clog << "Coordinates have been read!" << endl;
+
+	/*
+	* 开始处理粒子速度信息
+	*/
 	clog << "Reading velocities..." << endl;
 	for (size_t i = 0; i < particle_num; i++)
 	{
@@ -172,7 +193,7 @@ Configuration::Configuration(std::string config_file, BoxType _boxtype, PairStyl
 	infile.close();
 }
 
-size_t Configuration::__add_particle(const Particle& new_pa)
+size_t Configuration::__add_particle(const Particle& new_pa) //新添加一个粒子
 {
 	bool flag_inbox = new_pa.rx >= xlo && new_pa.rx <= xhi
 		&& new_pa.ry >= ylo && new_pa.ry <= yhi
@@ -196,7 +217,7 @@ size_t Configuration::__add_particle(const Particle& new_pa)
 	return vec_particle.size();
 }
 
-void Configuration::to_data(string fname, BoxType _boxtype)
+void Configuration::to_data(string fname, BoxType _boxtype) //以lammps data文件格式输出
 {
 	ofstream ofile;
 	ofile.open(fname);
@@ -246,7 +267,7 @@ void Configuration::to_data(string fname, BoxType _boxtype)
 	return;
 }
 
-void Configuration::to_dump(string ofname, string opath, string style) const
+void Configuration::to_dump(string ofname, string opath, string style) const //以lammps dumpo文件格式输出, style 可以指定为不同样式
 {
 	clog << "converting data file to dump file..." << endl;
 	clog << "dump style: " << style << endl;
@@ -278,6 +299,9 @@ void Configuration::to_dump(string ofname, string opath, string style) const
 		ofile << "ITME: BOX BOUNDS xy xz yz pp pp pp" << endl;
 		ofile.precision(15);
 
+		/*
+		* 注意此处边界的处理，data文件与dump文件格式不相同
+		*/
 		double xlo_bound = xlo + std::min({ 0.0, xy, xz, xy + xz });
 		double xhi_bound = xhi + std::max({ 0.0, xy, xz, xy + xz });
 

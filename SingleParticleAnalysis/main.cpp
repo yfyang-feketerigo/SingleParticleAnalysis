@@ -33,8 +33,6 @@ int main()
 		double tau_alpha = root["tau_alpha"].asDouble();
 		double rate = wi / tau_alpha;
 		string equi_fname = root["equi_config_fname"].asString();
-		//size_t start_step = root["start_step"].asUInt();
-		//size_t end_step = root["end_step"].asLargestUInt();
 		size_t start_moment = root["start_moment"].asLargestUInt();
 		size_t moment_number = root["moment_number"].asLargestUInt();
 		size_t delta_step = root["delta_step"].asLargestUInt();
@@ -104,7 +102,6 @@ int main()
 		void mkdir(std::string path);
 		mkdir(output_path);
 
-		//string statisticDir = output_path + "stastics/";
 
 		Configuration_StaticStructure config_equi
 		(equi_data_fpath + equi_fname, Configuration::BoxType::orthogonal, equi_data_pairstyle);//Configuration::PairStyle::single);
@@ -137,7 +134,6 @@ int main()
 		if (flag_computeFlowDisplacement)
 		{
 			mkdir(flow_displacement_dir);
-			//mkdir(flow_displacement_non_cross_box_dir);
 		}
 
 		string flow_ave_velocity_dir = output_path + "FlowAveVelocity/";
@@ -145,7 +141,6 @@ int main()
 		if (flag_computeFlowAveVelocity)
 		{
 			mkdir(flow_ave_velocity_dir);
-			//mkdir(flow_ave_velocity_non_cross_box_dir);
 		}
 
 		if (flag_CN)
@@ -249,7 +244,6 @@ int main()
 			}
 		}
 		cout << "####################################################################" << endl;
-		//cout << "PROGRAM END, TOTAL TIME USED: " << timer.elapsed() << "s" << endl;
 		return 0;
 	}
 	catch (const string e)
