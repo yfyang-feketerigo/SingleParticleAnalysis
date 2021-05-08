@@ -60,7 +60,7 @@ public:
 	inline void reset_filename(string _fname) { fname = _fname; }; //reset file name
 	bool open_file(); //open file, EXCUTE THIS BEFORE READ FILE!!!
 	void close_file(); //close file
-	void skiphead(); //skip head lines, if you want
+	void skiphead(); //skip head lines, you will need this in most case :)
 	size_t move_to_line(size_t _line); // move to specific line
 	size_t read_line_data(char delimiter = ' ', bool skip_empty = true); // read a line of data, with custom delimiter
 	size_t read_line_str(size_t _num); // read (some) line(s) of string
