@@ -76,5 +76,17 @@ PaAn_Settings.json为配置文件：
   计算在delta_step时长内，每个粒子在流场方向上的位移
   
   `"computeFlowAveVelocity": true`                  
-  计算在delta_step时长内，每个粒子在流场方向上的平均速度
+  计算在delta_step时长内，每个粒子在流场方向上的平均速度  
+
+---
+包括如下文件：  
+`configuration.h`,`configuration.cpp`：构象类，将data文件作为构象读入  
+
+`input.h`,`input.cpp`：Input类，按行读入数据文件
+
+`particle.h`,`particle.cpp`: Particle结构
+
+`main.cpp`:主程序
+
+
   
