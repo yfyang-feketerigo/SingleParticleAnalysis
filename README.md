@@ -21,7 +21,7 @@ PaAn_Settings.json为配置文件：
   `"fname_prefix": "data.restart.shear.wi.10.",`     
   data文件前缀，后缀应为时间步，例如data.restart.shear.wi.10.240000
   
-  `"shear_data_pairstyle": "single",`
+  `"shear_data_pairstyle": "single",`  
   data文件包含势能信息的格式与形式，目前包括
   
   single: 存储相同粒子间的势能信息，不同粒子间势能信息丢失(LAMMPS可能会按照特定算法恢复，但是往往并非正确结果，需要注意)
