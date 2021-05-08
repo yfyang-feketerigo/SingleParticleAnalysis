@@ -7,21 +7,21 @@
 -----
 PaAn_Settings.json为配置文件：
 
-  ```"_comment": "路径名记得添加 '/'",```
+  `"_comment": "路径名记得添加 '/'",`
   
-  ```"wi": 10,```                                  
+  `"wi": 10,`                                
   剪切速率，使用无量纲魏森贝格数  
   
-  ```"tau_alpha": 12000,```                       
+  `"tau_alpha": 12000,`                       
   α松弛时间，LJ单位(原则上可以使用其他单位制，应与LAMMPS使用单位保持一致）  
   
-  ```"data_fpath": "./",```  
+  `"data_fpath": "./",`  
   data文件存放路径
   
-  ```"fname_prefix": "data.restart.shear.wi.10.",```     
+  `"fname_prefix": "data.restart.shear.wi.10.",`     
   data文件前缀，后缀应为时间步，例如data.restart.shear.wi.10.240000
   
-  ```"shear_data_pairstyle": "single",```
+  `"shear_data_pairstyle": "single",`  
   data文件包含势能信息的格式与形式，目前包括
   
   single: 存储相同粒子间的势能信息，不同粒子间势能信息丢失(LAMMPS可能会按照特定算法恢复，但是往往并非正确结果，需要注意)
@@ -30,13 +30,13 @@ PaAn_Settings.json为配置文件：
   
   none：没有势能信息包含在data文件中
   
-  ```"fname_postfix": null,```                           
+  `"fname_postfix": null,`                           
   文件后缀，用.分割，应对时间步在中间的情况。备用方案，未经严格测试。
   
-  ```"delta_step": 240000,```                            
+  `"delta_step": 240000,`                            
   处理间隔，即每隔delta_step步进行一次处理计算。单位为MD时间步，并非时间单位。
   
-  ```"moment_number": 1,```  
+  `"moment_number": 1,`  
   总时刻数，即总共需要计算多少个瞬间。
   
   `"start_moment": 1,`                               
@@ -76,5 +76,17 @@ PaAn_Settings.json为配置文件：
   计算在delta_step时长内，每个粒子在流场方向上的位移
   
   `"computeFlowAveVelocity": true`                  
-  计算在delta_step时长内，每个粒子在流场方向上的平均速度
+  计算在delta_step时长内，每个粒子在流场方向上的平均速度  
+
+---
+包括如下文件：  
+`configuration.h`,`configuration.cpp`：构象类，将data文件作为构象读入  
+
+`input.h`,`input.cpp`：Input类，按行读入数据文件
+
+`particle.h`,`particle.cpp`: Particle结构
+
+`main.cpp`:主程序
+
+
   
