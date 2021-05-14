@@ -30,7 +30,7 @@ Input::Input(string _fname, size_t _headline)
 	{
 		totalLine = 0;
 		cerr << "open input file failed!" << endl;
-		throw "open input file failed!";
+		throw std::exception("open input file failed!");
 	}
 }
 
@@ -59,7 +59,7 @@ bool Input::open_file()
 	else
 	{
 		cerr << "input file has already been opened!" << endl;
-		throw "input file has already been opened!";
+		throw std::exception("input file has already been opened!");
 	}
 	return infile.is_open();
 }
@@ -79,7 +79,7 @@ void Input::close_file()
 	else
 	{
 		cerr << "input file is not opened!" << endl;
-		throw "input file is not opened!";
+		throw std::exception("input file is not opened!");
 	}
 }
 
@@ -101,13 +101,13 @@ void Input::skiphead()
 		else
 		{
 			cerr << "head lines in file has already been skipped!" << endl;
-			throw "head lines in file has already been skipped!";
+			throw std::exception("head lines in file has already been skipped!");
 		}
 	}
 	else
 	{
 		cerr << fname << " not open!" << endl;
-		throw(fname + " not open!");
+		throw std::exception((fname + " not open!").c_str());
 	}
 }
 
@@ -175,7 +175,7 @@ size_t Input::read_line_data(char delimiter, bool skip_empty)
 	else
 	{
 		cerr << "input file is not open!" << endl;
-		throw "input file is not open!";
+		throw std::exception("input file is not open!");
 	}
 }
 

@@ -119,7 +119,7 @@ Configuration::Configuration(std::string config_file, BoxType _boxtype, PairStyl
 	else
 	{
 		cerr << "File " << config_file << " open failed!" << endl;
-		throw config_file;
+		throw std::exception(config_file.c_str());
 	}
 	infile.close();
 
@@ -201,7 +201,7 @@ size_t Configuration::__add_particle(const Particle& new_pa) //ÐÂÌí¼ÓÒ»¸öÁ£×Ó
 	if (!flag_inbox)
 	{
 		cerr << "new particle coordiantion is not in box!" << endl;
-		throw "new particle coordiantion is not in box!";
+		throw std::exception("new particle coordiantion is not in box!");
 	}
 	bool flag_oldtype = true;
 	for (size_t i = 0; i < vec_particle.size(); i++)
@@ -224,7 +224,7 @@ void Configuration::to_data(string fname, BoxType _boxtype) //ÒÔlammps dataÎÄ¼þ¸
 	if (!ofile.is_open())
 	{
 		cerr << fname << " open failed" << endl;
-		throw (fname + " open failed");
+		throw std::exception((fname + " open failed").c_str());
 	}
 	ofile << "LAMMPS data file via C++, Configuration class, timestep = " << timestep << endl;
 	ofile << endl;
@@ -284,7 +284,7 @@ void Configuration::to_dump(string ofname, string opath, string style) const //Ò
 	if (!ofile.is_open())
 	{
 		cerr << full_opath << " open failed" << endl;
-		throw (full_opath + " open failed");
+		throw std::exception((full_opath + " open failed").c_str());
 	}
 
 	double lx = xhi - xlo;
@@ -332,6 +332,6 @@ void Configuration::to_dump(string ofname, string opath, string style) const //Ò
 	}
 
 	cerr << "wrong dump style: " << style << endl;
-	throw ("wrong dump style: " + style);
+	throw std::exception(("wrong dump style: " + style).c_str());
 
 }
