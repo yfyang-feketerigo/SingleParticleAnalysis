@@ -162,7 +162,11 @@ size_t Input::read_line_data(char delimiter, bool skip_empty)
 			istringstream ss(line);
 			string str_num;
 			while (std::getline(ss, str_num, delimiter))
+			{
+				str_num = trim(str_num);
 				data.push_back(std::stod(str_num));
+			}
+
 		}
 		linePointer += 1;
 		return data.size();
