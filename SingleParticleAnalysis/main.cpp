@@ -197,9 +197,9 @@ int main()
 				for (size_t i = 0; i < config_t.get_particle().size(); i++)
 				{
 					const Particle& pa = config_t.get_particle()[i];
-					x_sum[pa.id] += pa.rx;
-					y_sum[pa.id] += pa.ry;
-					z_sum[pa.id] += pa.rz;
+					x_sum[pa.id] += config_t.get_rx_real(pa);//pa.rx;
+					y_sum[pa.id] += config_t.get_ry_real(pa);// pa.ry;
+					z_sum[pa.id] += config_t.get_rz_real(pa);// pa.rz;
 				}
 				vector<double> y_ave = y_sum;
 				for (size_t i = 0; i < y_ave.size(); i++)
