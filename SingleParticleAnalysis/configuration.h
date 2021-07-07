@@ -179,7 +179,7 @@ public:
 	void to_data(string fname, BoxType _boxtype = BoxType::tilt);
 
 	template<typename T>
-	void para_to_dump(string fname, std::initializer_list<string> add_para_name, std::initializer_list<vector<T>> add_para, vector<string> comments = {})//注意额外参量与粒子序号的对应关系
+	void para_to_dump(string fname, std::initializer_list<string> add_para_name, std::initializer_list<vector<T>> add_para, vector<string> comments = {}) const//注意额外参量与粒子序号的对应关系
 	{
 		ofstream ofile;
 		ofile.open(fname);
@@ -222,7 +222,7 @@ public:
 		//输出粒子信息，随后输出额外参量值
 		for (size_t i = 0; i < vec_particle.size(); i++)
 		{
-			Particle& pa = vec_particle[i];
+			const Particle& pa = vec_particle[i];
 			ofile << pa.id << " " << pa.type << " " << pa.rx << " " << pa.ry << " " << pa.rz << " ";
 			ofile << pa.box_x << " " << pa.box_y << " " << pa.box_z << " ";
 			for (auto it_li = add_para.begin(); it_li < add_para.end(); it_li++)
