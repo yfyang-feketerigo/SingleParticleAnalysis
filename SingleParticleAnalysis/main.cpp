@@ -32,34 +32,35 @@ int main()
 		double wi = root["wi"].asDouble();
 		double tau_alpha = root["tau_alpha"].asDouble();
 		double rate = wi / tau_alpha;
-		string equi_fname = root["equi_config_fname"].asString();
+		string t0_fname = root["t0config_fname"].asString();
 		size_t start_moment = root["start_moment"].asLargestUInt();
 		size_t moment_number = root["moment_number"].asLargestUInt();
 		size_t delta_step = root["delta_step"].asLargestUInt();
+		size_t t0_shift_timestep = root["t0_shift_step"].asLargestUInt();
 		string fname_prefix = root["fname_prefix"].asString();
 		string fname_postfix = root["fname_postfix"].asString();
 		string data_fpath = root["data_fpath"].asString();
 		string output_path = root["output_path"].asString();
-		string equi_data_fpath = root["equi_data_fpath"].asString();
+		string t0data_fpath = root["t0data_fpath"].asString();
 
-		string str_equi_data_pairstyle = root["equi_data_pairstyle"].asString();
-		Configuration::PairStyle equi_data_pairstyle = Configuration::PairStyle::none;
-		if (str_equi_data_pairstyle == "single")
+		string str_t0data_pairstyle = root["t0data_pairstyle"].asString();
+		Configuration::PairStyle t0data_pairstyle = Configuration::PairStyle::none;
+		if (str_t0data_pairstyle == "single")
 		{
-			equi_data_pairstyle = Configuration::PairStyle::single;
+			t0data_pairstyle = Configuration::PairStyle::single;
 		}
-		else if (str_equi_data_pairstyle == "pair")
+		else if (str_t0data_pairstyle == "pair")
 		{
-			equi_data_pairstyle = Configuration::PairStyle::pair;
+			t0data_pairstyle = Configuration::PairStyle::pair;
 		}
-		else if (str_equi_data_pairstyle == "none")
+		else if (str_t0data_pairstyle == "none")
 		{
-			equi_data_pairstyle = Configuration::PairStyle::none;
+			t0data_pairstyle = Configuration::PairStyle::none;
 		}
 		else
 		{
-			cerr << ("WRONG pair style: " + str_equi_data_pairstyle) << endl;
-			throw ("WRONG pair style: " + str_equi_data_pairstyle);
+			cerr << ("WRONG pair style: " + str_t0data_pairstyle) << endl;
+			throw ("WRONG pair style: " + str_t0data_pairstyle);
 		}
 
 		string str_shear_data_pairstyle = root["shear_data_pairstyle"].asString();
@@ -92,7 +93,7 @@ int main()
 			cerr << "data file path: " << boost_path_check << " not exits" << endl;
 			throw ("data file path: " + boost_path_check.string() + " not exits");
 		}
-		boost_path_check = boost::filesystem::path(equi_data_fpath);
+		boost_path_check = boost::filesystem::path(t0data_fpath);
 		if (!(boost::filesystem::exists(boost_path_check) && boost::filesystem::is_directory(boost_path_check)))
 		{
 			cerr << "data file path: " << boost_path_check << " not exits" << endl;
@@ -104,7 +105,7 @@ int main()
 
 
 		Configuration_StaticStructure config_equi
-		(equi_data_fpath + equi_fname, Configuration::BoxType::orthogonal, equi_data_pairstyle);//Configuration::PairStyle::single);
+		(t0data_fpath + t0_fname, Configuration::BoxType::orthogonal, t0data_pairstyle);//Configuration::PairStyle::single);
 		config_equi.set_time_step(0); //平衡态设为0时间点
 
 		bool flag_CN = root["computeCN"].asBool();
@@ -163,7 +164,7 @@ int main()
 		Configuration_ParticleDynamic config_last_moment;
 		for (size_t imoment = start_moment; imoment <= moment_number; imoment++)
 		{
-			size_t istep = imoment * delta_step;
+			size_t istep = imoment * delta_step + t0_shift_timestep;
 			ncounter++;
 			string str_istep = to_string(istep);
 			string config_t_fname = data_fpath + fname_prefix + str_istep + fname_postfix;
