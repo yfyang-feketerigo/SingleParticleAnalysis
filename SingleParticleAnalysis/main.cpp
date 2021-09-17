@@ -16,10 +16,12 @@ int main()
 {
 	try
 	{
+		std::ios_base::sync_with_stdio(false);
+		std::cin.tie(NULL);
 		boost::timer::auto_cpu_timer timer;
 		Json::Value root;
 
-		std::clog << "Reading PaAn_Settings.json..." << endl;
+		std::clog << "Reading PaAn_Settings.json..." << '\n';
 
 		ifstream f_settings;
 		f_settings.open("PaAn_Settings.json", std::ios_base::binary);
@@ -241,23 +243,23 @@ int main()
 			if (flag_store_last_moment)
 			{
 				config_last_moment = config_t;
-				cout << config_last_moment.get_timestep() << endl;
+				cout << config_last_moment.get_timestep() << '\n';
 			}
 		}
-		cout << "####################################################################" << endl;
+		cout << "####################################################################" << '\n';
 		return 0;
 	}
 	catch (const string e)
 	{
-		cout << e << endl;
+		cout << e << '\n';
 	}
 	catch (const std::exception& e)
 	{
-		cout << "An exception occurred. Exception: " << e.what() << endl;
+		cout << "An exception occurred. Exception: " << e.what() << '\n';
 	}
 	catch (...)
 	{
-		cout << "An undifine exception occurred." << endl;
+		cout << "An undifine exception occurred." << '\n';
 	}
 }
 

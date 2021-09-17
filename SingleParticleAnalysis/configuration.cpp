@@ -2,9 +2,9 @@
 
 Configuration::Configuration(std::string config_file, BoxType _boxtype, PairStyle _pairstyle)
 {
-	clog << "#LAMMPS data file reader..." << endl;
-	clog << "#Ivan Young@CIAC 20201020" << endl;
-	clog << "Reading configuration data file " << config_file << " ..." << endl;
+	clog << "#LAMMPS data file reader..." << '\n';
+	clog << "#Ivan Young@CIAC 20201020" << '\n';
+	clog << "Reading configuration data file " << config_file << " ..." << '\n';
 	//timestep = _time;
 	filename = config_file;
 	string firstline;
@@ -13,7 +13,7 @@ Configuration::Configuration(std::string config_file, BoxType _boxtype, PairStyl
 	infile.open(config_file);
 	if (infile.is_open())
 	{
-		clog << "Processing data file head information..." << endl;
+		clog << "Processing data file head information..." << '\n';
 		//»ñÈ¡Ê±¼ä²½ÐÅÏ¢
 		getline(infile, firstline); //1st line
 		string str_timestep;
@@ -114,7 +114,7 @@ Configuration::Configuration(std::string config_file, BoxType _boxtype, PairStyl
 		HEAD_INFO_LINE++;
 		infile.ignore(LINE_SKIP_MAX, '\n');
 		HEAD_INFO_LINE++;
-		clog << "Head information has been processed" << endl;
+		clog << "Head information has been processed" << '\n';
 	}
 	else
 	{
@@ -126,36 +126,36 @@ Configuration::Configuration(std::string config_file, BoxType _boxtype, PairStyl
 	/*
 	* ÆÁÄ»Êä³ö¶ÁÈëµÄdataÎÄ¼þÐÅÏ¢£¬ÓÃÓÚÐ£Ñé²î´í
 	*/
-	clog << firstline << endl;;
-	clog << "Configuration data file " << config_file << " has " << particle_num << " particles" << endl;
-	clog << "Configuration has " << type_num << " particle type(s)" << endl;
-	clog << "Time Step: " << timestep << endl;
+	clog << firstline << '\n';;
+	clog << "Configuration data file " << config_file << " has " << particle_num << " particles" << '\n';
+	clog << "Configuration has " << type_num << " particle type(s)" << '\n';
+	clog << "Time Step: " << timestep << '\n';
 	for (size_t i = 0; i < strvec_mass_info.size(); i++)
 	{
-		clog << strvec_mass_info[i] << endl;
+		clog << strvec_mass_info[i] << '\n';
 	}
 
 	for (size_t i = 0; i < strvec_pair_info.size(); i++)
 	{
-		clog << strvec_pair_info[i] << endl;
+		clog << strvec_pair_info[i] << '\n';
 	}
-	clog << endl << "Box Parameters:" << endl;
-	clog << "xlo, xhi: " << xlo << ' ' << xhi << endl;
-	clog << "ylo, yhi: " << ylo << ' ' << yhi << endl;
-	clog << "zlo, zhi: " << zlo << ' ' << zhi << endl;
-	clog << "xy, xz, yz: " << xy << ' ' << xz << ' ' << yz << endl;
+	clog << '\n' << "Box Parameters:" << '\n';
+	clog << "xlo, xhi: " << xlo << ' ' << xhi << '\n';
+	clog << "ylo, yhi: " << ylo << ' ' << yhi << '\n';
+	clog << "zlo, zhi: " << zlo << ' ' << zhi << '\n';
+	clog << "xy, xz, yz: " << xy << ' ' << xz << ' ' << yz << '\n';
 	//clog << "head line info read!" << endl;
-	clog << endl;
-	clog << str_atoms_info << endl;
-	clog << endl << "File HEAD LINE: " << HEAD_INFO_LINE << endl;
-	clog << "File GAP LINE: " << GAP_LINE << endl;
+	clog << '\n';
+	clog << str_atoms_info << '\n';
+	clog << '\n' << "File HEAD LINE: " << HEAD_INFO_LINE << '\n';
+	clog << "File GAP LINE: " << GAP_LINE << '\n';
 	Input in_data(config_file, HEAD_INFO_LINE);
-	clog << endl;
+	clog << '\n';
 
 	/*
 	* ¿ªÊ¼´¦ÀíÁ£×Ó×ø±êÐÅÏ¢
 	*/
-	clog << "Reading coordinates..." << endl;
+	clog << "Reading coordinates..." << '\n';
 	in_data.open_file();
 	in_data.skiphead();
 	vec_particle.resize(particle_num);
@@ -173,12 +173,12 @@ Configuration::Configuration(std::string config_file, BoxType _boxtype, PairStyl
 	}
 
 	in_data.skip_line(GAP_LINE); //Ìø¹ý×ø±êÓëËÙ¶È¼ä¿ÕÐÐ
-	clog << "Coordinates have been read!" << endl;
+	clog << "Coordinates have been read!" << '\n';
 
 	/*
 	* ¿ªÊ¼´¦ÀíÁ£×ÓËÙ¶ÈÐÅÏ¢
 	*/
-	clog << "Reading velocities..." << endl;
+	clog << "Reading velocities..." << '\n';
 	for (size_t i = 0; i < particle_num; i++)
 	{
 		in_data.read_line_data();
@@ -187,9 +187,9 @@ Configuration::Configuration(std::string config_file, BoxType _boxtype, PairStyl
 		p_particle.vy = in_data.get_data()[2];
 		p_particle.vz = in_data.get_data()[3];
 	}
-	clog << "Velocities have been read!" << endl;
-	clog << "Configuration data file " << config_file << " has been read!" << endl;
-	clog << endl;
+	clog << "Velocities have been read!" << '\n';
+	clog << "Configuration data file " << config_file << " has been read!" << '\n';
+	clog << '\n';
 	infile.close();
 }
 
@@ -226,42 +226,42 @@ void Configuration::to_data(string fname, BoxType _boxtype) //ÒÔlammps dataÎÄ¼þ¸
 		cerr << fname << " open failed" << endl;
 		throw std::exception((fname + " open failed").c_str());
 	}
-	ofile << "LAMMPS data file via C++, Configuration class, timestep = " << timestep << endl;
-	ofile << endl;
-	ofile << particle_num << " atoms" << endl;
-	ofile << type_num << " atom types" << endl;
-	ofile << endl;
+	ofile << "LAMMPS data file via C++, Configuration class, timestep = " << timestep << '\n';
+	ofile << '\n';
+	ofile << particle_num << " atoms" << '\n';
+	ofile << type_num << " atom types" << '\n';
+	ofile << '\n';
 
-	ofile << xlo << " " << xhi << " " << "xlo " << "xhi" << endl;
-	ofile << ylo << " " << yhi << " " << "ylo " << "yhi" << endl;
-	ofile << zlo << " " << zhi << " " << "zlo " << "zhi" << endl;
+	ofile << xlo << " " << xhi << " " << "xlo " << "xhi" << '\n';
+	ofile << ylo << " " << yhi << " " << "ylo " << "yhi" << '\n';
+	ofile << zlo << " " << zhi << " " << "zlo " << "zhi" << '\n';
 	if (_boxtype == BoxType::tilt)
 	{
 		ofile << xy << " " << xz << " " << yz << " " << "xy " << "xz " << "yz";
 	}
 	for (size_t i = 0; i < strvec_mass_info.size(); i++)
 	{
-		ofile << strvec_mass_info[i] << endl;
+		ofile << strvec_mass_info[i] << '\n';
 	}
 	for (size_t i = 0; i < strvec_pair_info.size(); i++)
 	{
-		ofile << strvec_pair_info[i] << endl;
+		ofile << strvec_pair_info[i] << '\n';
 	}
-	ofile << str_atoms_info << endl;
-	ofile << endl;
+	ofile << str_atoms_info << '\n';
+	ofile << '\n';
 	for (size_t i = 0; i < vec_particle.size(); i++)
 	{
 		Particle& pa = vec_particle[i];
 		ofile << pa.id << " " << pa.type << " " << pa.rx << " " << pa.ry << " " << pa.rz << " "
-			<< pa.box_x << " " << pa.box_y << " " << pa.box_z << endl;
+			<< pa.box_x << " " << pa.box_y << " " << pa.box_z << '\n';
 	}
-	ofile << endl;
-	ofile << "Velocities" << endl;
-	ofile << endl;
+	ofile << '\n';
+	ofile << "Velocities" << '\n';
+	ofile << '\n';
 	for (size_t i = 0; i < vec_particle.size(); i++)
 	{
 		Particle& pa = vec_particle[i];
-		ofile << pa.id << " " << pa.vx << " " << pa.vy << " " << pa.vz << endl;
+		ofile << pa.id << " " << pa.vx << " " << pa.vy << " " << pa.vz << '\n';
 	}
 	ofile.close();
 	return;
@@ -269,10 +269,10 @@ void Configuration::to_data(string fname, BoxType _boxtype) //ÒÔlammps dataÎÄ¼þ¸
 
 void Configuration::to_dump(string ofname, string opath, string style) const //ÒÔlammps dumpoÎÄ¼þ¸ñÊ½Êä³ö, style ¿ÉÒÔÖ¸¶¨Îª²»Í¬ÑùÊ½
 {
-	clog << "converting data file to dump file..." << endl;
-	clog << "dump style: " << style << endl;
-	clog << "dump path: " << opath << endl;
-	clog << "dump file name: " << ofname << endl;
+	clog << "converting data file to dump file..." << '\n';
+	clog << "dump style: " << style << '\n';
+	clog << "dump path: " << opath << '\n';
+	clog << "dump file name: " << ofname << '\n';
 	if (!boost::filesystem::exists(opath))
 	{
 		boost::filesystem::create_directories(opath);
@@ -292,11 +292,11 @@ void Configuration::to_dump(string ofname, string opath, string style) const //Ò
 	double lz = zhi - zlo;
 	if (style == "yjruan")
 	{
-		ofile << "ITEM: TIMESTEP" << endl;
-		ofile << timestep << endl;
-		ofile << "ITEM: NUMBER OF ATOMS" << endl;
-		ofile << particle_num << endl;
-		ofile << "ITME: BOX BOUNDS xy xz yz pp pp pp" << endl;
+		ofile << "ITEM: TIMESTEP" << '\n';
+		ofile << timestep << '\n';
+		ofile << "ITEM: NUMBER OF ATOMS" << '\n';
+		ofile << particle_num << '\n';
+		ofile << "ITME: BOX BOUNDS xy xz yz pp pp pp" << '\n';
 		ofile.precision(15);
 
 		/*
@@ -311,10 +311,10 @@ void Configuration::to_dump(string ofname, string opath, string style) const //Ò
 		double zlo_bound = zlo;
 		double zhi_bound = zhi;
 
-		ofile << xlo_bound << " " << xhi_bound << " " << xy << endl;
-		ofile << ylo_bound << " " << yhi_bound << " " << xz << endl;
-		ofile << zlo_bound << " " << zhi_bound << " " << yz << endl;
-		ofile << "ITEM: ATOMES id xu yu zu" << endl;
+		ofile << xlo_bound << " " << xhi_bound << " " << xy << '\n';
+		ofile << ylo_bound << " " << yhi_bound << " " << xz << '\n';
+		ofile << zlo_bound << " " << zhi_bound << " " << yz << '\n';
+		ofile << "ITEM: ATOMES id xu yu zu" << '\n';
 		for (size_t i = 0; i < vec_particle.size(); i++)
 		{
 			const Particle& p_pa = vec_particle[i];
@@ -326,12 +326,12 @@ void Configuration::to_dump(string ofname, string opath, string style) const //Ò
 			ofile << xu << " ";
 			ofile << yu << " ";
 			ofile << zu << " ";
-			ofile << endl;
+			ofile << '\n';
 		}
 		return;
 	}
 
-	cerr << "wrong dump style: " << style << endl;
+	cerr << "wrong dump style: " << style << '\n';
 	throw std::exception(("wrong dump style: " + style).c_str());
 
 }
