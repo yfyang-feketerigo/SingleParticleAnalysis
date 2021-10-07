@@ -65,6 +65,22 @@ int main()
 			throw ("WRONG pair style: " + str_t0data_pairstyle);
 		}
 
+		string str_t0data_boxtype = root["t0data_boxtype"].asString();
+		auto t0data_boxsytle = Configuration::BoxType::orthogonal;
+		if (str_t0data_boxtype == "orthogonal")
+		{
+			t0data_boxsytle = Configuration::BoxType::orthogonal;
+		}
+		else if (str_t0data_boxtype == "tilt")
+		{
+			t0data_boxsytle = Configuration::BoxType::tilt;
+		}
+		else
+		{
+			cerr << ("WRONG box type: " + str_t0data_boxtype) << endl;
+			throw ("WRONG box type: " + str_t0data_boxtype);
+		}
+
 		string str_shear_data_pairstyle = root["shear_data_pairstyle"].asString();
 		Configuration::PairStyle shear_data_pairstyle = Configuration::PairStyle::none;
 		if (str_shear_data_pairstyle == "single")
@@ -106,9 +122,9 @@ int main()
 		mkdir(output_path);
 
 
-		Configuration_StaticStructure config_equi
-		(t0data_fpath + t0_fname, Configuration::BoxType::orthogonal, t0data_pairstyle);//Configuration::PairStyle::single);
-		config_equi.set_time_step(0); //平衡态设为0时间点
+		Configuration_StaticStructure config_t0
+		(t0data_fpath + t0_fname, t0data_boxsytle, t0data_pairstyle);//Configuration::PairStyle::single);
+		config_t0.set_time_step(0 + t0_shift_timestep); //设定t0
 
 		bool flag_CN = root["computeCN"].asBool();
 		bool flag_MSD = root["computeMSD"].asBool();
@@ -148,15 +164,15 @@ int main()
 
 		if (flag_CN)
 		{
-			config_equi.compute_CN(CN_rcut);
-			config_equi.CN_to_file(CNdir + "cn.0");
+			config_t0.compute_CN(CN_rcut);
+			config_t0.CN_to_file(CNdir + "cn.0");
 		}
-		vector<double> y_sum(config_equi.get_particle().size(), 0);
-		vector<double> x_sum(config_equi.get_particle().size(), 0);
-		vector<double> z_sum(config_equi.get_particle().size(), 0);
-		for (size_t i = 0; i < config_equi.get_particle().size(); i++)
+		vector<double> y_sum(config_t0.get_particle().size(), 0);
+		vector<double> x_sum(config_t0.get_particle().size(), 0);
+		vector<double> z_sum(config_t0.get_particle().size(), 0);
+		for (size_t i = 0; i < config_t0.get_particle().size(); i++)
 		{
-			const Particle& pa = config_equi.get_particle()[i];
+			const Particle& pa = config_t0.get_particle()[i];
 			x_sum[pa.id] = pa.rx;
 			y_sum[pa.id] = pa.ry;
 			z_sum[pa.id] = pa.rz;
@@ -179,19 +195,19 @@ int main()
 
 			if (flag_MSD)
 			{
-				config_t.compute_msd(config_equi);
+				config_t.compute_msd(config_t0);
 				config_t.to_file_MSD(MSDdir + "MSD." + str_istep);
 			}
 
 			if (flag_MSDnonAffine)
 			{
-				config_t.compute_shear_MSDnonAffine(config_equi, Configuration_ParticleDynamic::ShearDirection::xy, rate);
+				config_t.compute_shear_MSDnonAffine(config_t0, Configuration_ParticleDynamic::ShearDirection::xy, rate);
 				config_t.to_file_nonAffineMSD(MSDnonAffinedir + "MSDnonAffine." + str_istep);
 			}
 
 			if (flag_MSDnonAffine_t0)
 			{
-				config_t.compute_shear_MSDnonAffine_t0(config_equi, Configuration_ParticleDynamic::ShearDirection::xy, rate);
+				config_t.compute_shear_MSDnonAffine_t0(config_t0, Configuration_ParticleDynamic::ShearDirection::xy, rate);
 				config_t.to_file_nonAffineMSD(MSDnonAffine_t0_dir + "MSDnonAffine_t0." + str_istep);
 			}
 
@@ -209,7 +225,7 @@ int main()
 				{
 					y_ave[i] /= ncounter;
 				}
-				config_t.compute_shear_MSDnonAffine(config_equi, Configuration_ParticleDynamic::ShearDirection::xy, rate, y_ave);
+				config_t.compute_shear_MSDnonAffine(config_t0, Configuration_ParticleDynamic::ShearDirection::xy, rate, y_ave);
 				config_t.to_file_nonAffineMSD(MSDnonAffine_gradient_ave_dir + "MSDnonAffineGrdAve." + str_istep);
 			}
 
@@ -217,7 +233,7 @@ int main()
 			{
 				if (imoment == start_moment)
 				{
-					config_t.compute_shear_flow_displacement(config_equi, Configuration_ParticleDynamic::ShearDirection::xy);
+					config_t.compute_shear_flow_displacement(config_t0, Configuration_ParticleDynamic::ShearDirection::xy);
 				}
 				else
 				{
@@ -230,7 +246,7 @@ int main()
 			{
 				if (imoment == start_moment)
 				{
-					config_t.compute_shear_flow_ave_velocity(config_equi, Configuration_ParticleDynamic::ShearDirection::xy);
+					config_t.compute_shear_flow_ave_velocity(config_t0, Configuration_ParticleDynamic::ShearDirection::xy);
 				}
 				else
 				{

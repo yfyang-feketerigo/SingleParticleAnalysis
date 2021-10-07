@@ -12,6 +12,7 @@
   "t0data_fpath": "./",
   "t0config_fname": "data.T0.42.Equi",
   "t0data_pairstyle": "single",
+  "t0data_boxtype": "orthogonal",
   "t0_shift_step": 0,
   "output_path": "./test/",
   "CN_rcut": 1.0,
