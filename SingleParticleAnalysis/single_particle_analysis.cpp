@@ -335,7 +335,7 @@ void Configuration_ParticleDynamic::compute_shear_flow_ave_velocity(const Config
 	double ly_t0 = config_t0.get_yhi() - config_t0.get_ylo();
 	double lz_t0 = config_t0.get_zhi() - config_t0.get_zlo();
 
-	double dt = (get_timestep() - config_t0.get_timestep()) * step_time;
+	double dt = (this->get_timestep() - config_t0.get_timestep()) * step_time;
 
 	flow_ave_velocity.resize(get_particle_num() + 1);
 	for (size_t i = 0; i < get_particle().size(); i++)
@@ -344,7 +344,7 @@ void Configuration_ParticleDynamic::compute_shear_flow_ave_velocity(const Config
 		const Particle& p_pa_t0 = config_t0.get_particle(p_pa.id);
 		flow_ave_velocity[i].particle_id = p_pa.id;
 		flow_ave_velocity[i].last_step = config_t0.get_timestep();
-		flow_ave_velocity[i].now_step = config_t0.get_timestep();
+		flow_ave_velocity[i].now_step = this->get_timestep();
 		double _ave_v = 0;
 		switch (shear_direction)
 		{
