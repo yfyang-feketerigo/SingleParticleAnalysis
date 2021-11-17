@@ -45,4 +45,18 @@
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="data_restartFile_wi10\data.restart.DPD.shear.wi10.13200">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="data_restartFile_wi10\data.restart.DPD.shear.wi10.59400">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="data_restartFile_wi10\data.restart.DPD.shear.wi10.528000">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="data_restartFile_wi10\data.restart.DPD.shear.wi10.1069200">
+      <Filter>资源文件</Filter>
+    </None>
+  </ItemGroup>
 </Project>

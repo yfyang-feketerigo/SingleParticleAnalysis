@@ -12,32 +12,42 @@ of equi data file & shear data file
 #include <boost/timer/timer.hpp>
 #include <boost/filesystem.hpp>
 
-int main(int argc, size_t* argv[3])
+int main(int argc, char* argv[])
 {
 	try
 	{
-		if (argc != 3)
+		bool flag_special_t0 = false;
+		if (argc != 3 && argc != 4)
 		{
-			throw std::exception("wrong args num!\n");
+			throw std::exception("wrong parameter number!\n");
 		}
-		size_t timestep_t0 = *argv[1];
-		size_t delta_step = *argv[2];
+		if (argc == 4)
+		{
+			string str_flag_special_t0(argv[3]);
+			if ("flag_special_t0" == str_flag_special_t0) flag_special_t0 = true;
+		}
+		string str_timestep_t0(argv[1]);
+		size_t timestep_t0 = std::stoll(str_timestep_t0);
+		string str_delta_step(argv[2]);
+		size_t delta_step = std::stoll(str_delta_step);
+		std::cout << "timestep settings:\n";
 		std::cout << "t0 timestep: " << timestep_t0 << "\n";
 		std::cout << "delta timstep: " << delta_step << '\n';
 		std::cout << "t timstep: " << delta_step + timestep_t0 << '\n';
+		std::cout << "\n";
 		std::ios_base::sync_with_stdio(false);
 		std::cin.tie(NULL);
 		boost::timer::auto_cpu_timer timer;
 		Json::Value root;
 
-		std::clog << "Reading PaAn_Settings.json..." << '\n';
+		std::clog << "Reading PaAn_PerMoment.json..." << '\n';
 
 		ifstream f_settings;
-		f_settings.open("PaAn_Settings.json", std::ios_base::binary);
+		f_settings.open("PaAn_PerMoment.json", std::ios_base::binary);
 		if (!f_settings.is_open())
 		{
-			std::cerr << "file \"PaAn_Settings.json\" open failed" << endl;
-			throw std::exception("file \"PaAn_Settings.json\" open failed");
+			//std::cerr << "file \"PaAn_Settings.json\" open failed" << endl;
+			throw std::exception("file \"PaAn_PerMoment.json\" open failed");
 		}
 		f_settings >> root;
 		double wi = root["wi"].asDouble();
@@ -51,6 +61,10 @@ int main(int argc, size_t* argv[3])
 
 
 		string str_t0data_pairstyle = root["t0data_pairstyle"].asString();
+		if (flag_special_t0)
+		{
+			str_t0data_pairstyle = root["special_t0Equidata_pairstyle"].asString();
+		}
 		Configuration::PairStyle t0data_pairstyle = Configuration::PairStyle::none;
 		if (str_t0data_pairstyle == "single")
 		{
@@ -70,6 +84,10 @@ int main(int argc, size_t* argv[3])
 		}
 
 		string str_t0data_boxtype = root["t0data_boxtype"].asString();
+		if (flag_special_t0)
+		{
+			str_t0data_pairstyle = root["special_t0Equidata_boxtype"].asString();
+		}
 		auto t0data_boxsytle = Configuration::BoxType::orthogonal;
 		if (str_t0data_boxtype == "orthogonal")
 		{
@@ -83,6 +101,7 @@ int main(int argc, size_t* argv[3])
 		{
 			throw std::exception(("WRONG box type: " + str_t0data_boxtype).c_str());
 		}
+
 
 		string str_tdata_pairstyle = root["tdata_pairstyle"].asString();
 		Configuration::PairStyle tdata_pairstyle = Configuration::PairStyle::none;
