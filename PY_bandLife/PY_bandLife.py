@@ -37,6 +37,7 @@ def compute_smoothed_Sigma_from_file(fname_v,
                                      data_grad_col=3,
                                      vmap_ghost_frac=0.5,
                                      vmap_smooth_frac=0.3):
+
     lgrad = lgrad_hi - lgrad_lo
     vmap_smooth_frac_ghost = vmap_smooth_frac / (1 + vmap_ghost_frac * 2)
 
