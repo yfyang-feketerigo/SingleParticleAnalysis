@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SingleParticleAnalysis", "S
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SingleParticleFlowPerMoment", "SingleParticleFlowPerMoment\SingleParticleFlowPerMoment.vcxproj", "{06A75E0E-CC7B-422C-8E4E-043000B717B1}"
 EndProject
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "PY_bandLife", "PY_bandLife\PY_bandLife.pyproj", "{DD20A617-883B-499A-88FD-B51F968B1C79}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -40,6 +42,12 @@ Global
 		{06A75E0E-CC7B-422C-8E4E-043000B717B1}.Release|x64.Build.0 = Release|x64
 		{06A75E0E-CC7B-422C-8E4E-043000B717B1}.Release|x86.ActiveCfg = Release|Win32
 		{06A75E0E-CC7B-422C-8E4E-043000B717B1}.Release|x86.Build.0 = Release|Win32
+		{DD20A617-883B-499A-88FD-B51F968B1C79}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD20A617-883B-499A-88FD-B51F968B1C79}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{DD20A617-883B-499A-88FD-B51F968B1C79}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{DD20A617-883B-499A-88FD-B51F968B1C79}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD20A617-883B-499A-88FD-B51F968B1C79}.Release|x64.ActiveCfg = Release|Any CPU
+		{DD20A617-883B-499A-88FD-B51F968B1C79}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

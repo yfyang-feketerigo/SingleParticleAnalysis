@@ -1,4 +1,4 @@
-
+ï»¿
 /*****************************************
 20210406 add new pair style: none, for none pair info data file, modify settings to allow adjust pairsytle
 of equi data file & shear data file
@@ -17,11 +17,22 @@ int main(int argc, char* argv[])
 	try
 	{
 		bool flag_special_t0 = false;
-		if (argc != 3 && argc != 4)
+		if (argc == 2 && string(argv[1]) == "help")
 		{
-			throw std::exception("wrong parameter number!\n");
+			cout << "<./this_programm help> to see this message\n";
+			cout << "excute like this: <./this_programm arg1 arg2 arg3[option]>\n";
+			cout << "arg1: t0 time step\n";
+			cout << "arg2: delta time step\n";
+			cout << "arg3: optional, if set to \"flag_special_t0\", flowing parameters in jsonfile will be used:\n";
+			cout << "    \"special_t0Equidata_boxtype\"\n";
+			cout << "    \"special_t0Equidata_pairstyle\"\n";
 		}
-		if (argc == 4)
+		else if (argc != 3 && argc != 4)
+		{
+			throw std::exception("illegal parameters!\n <. / this_programm help> to see help message\n");
+
+		}
+		else if (argc == 4)
 		{
 			string str_flag_special_t0(argv[3]);
 			if ("flag_special_t0" == str_flag_special_t0) flag_special_t0 = true;
@@ -30,6 +41,10 @@ int main(int argc, char* argv[])
 		size_t timestep_t0 = std::stoll(str_timestep_t0);
 		string str_delta_step(argv[2]);
 		size_t delta_step = std::stoll(str_delta_step);
+
+
+
+
 		std::cout << "timestep settings:\n";
 		std::cout << "t0 timestep: " << timestep_t0 << "\n";
 		std::cout << "delta timstep: " << delta_step << '\n';
@@ -178,7 +193,7 @@ int main(int argc, char* argv[])
 		Configuration_ParticleDynamic config_t
 		(data_fpath + config_t_fname, tdata_boxsytle, tdata_pairstyle);
 
-		if (flag_computeFlowDisplacement)//!¼ÆËãµ¥Á£×ÓÁ÷³¡·½ÏòÎ»ÒÆ£¬ÒÔ½øÒ»²½¼ÆËãÁ÷³¡ÎÊÌâ£¬¿ÉÒÔÌÔÌ­Ö®Ç°¼ôÇÐ´ø³ÌÐò¡£
+		if (flag_computeFlowDisplacement)//!è®¡ç®—å•ç²’å­æµåœºæ–¹å‘ä½ç§»ï¼Œä»¥è¿›ä¸€æ­¥è®¡ç®—æµåœºé—®é¢˜ï¼Œå¯ä»¥æ·˜æ±°ä¹‹å‰å‰ªåˆ‡å¸¦ç¨‹åºã€‚
 		{
 
 			config_t.compute_shear_flow_displacement(config_t0, Configuration_ParticleDynamic::ShearDirection::xy);
