@@ -19,6 +19,24 @@ sample_stop = 10
 istart = 1
 istop = 10
 
+# gamma = 1.0
+# delta_gamma = gamma / (istop - istart + 1)
+# delta_step = int(delta_gamma / (wi / tau_alpha) / 0.0025)
+
+# 样本循环
+'''
+for it_sample in range(sample_start - 1, sample_stop):
+    print("Processing sample{}".format(it_sample + 1))
+    #设定文件路径
+    displacement_path = set_displacement_path.format(isample=it_sample + 1,
+                                                     wi=wi)
+    velocity_path = set_velocity_path.format(isample=it_sample + 1, wi=wi)
+    displacement_opath = set_displacement_opath.format(isample=it_sample + 1,
+                                                       wi=wi)
+    velocity_opath = set_velocity_opath.format(isample=it_sample + 1, wi=wi)
+    #创建文件夹
+'''
+
 
 def main():
     wi = 10
@@ -37,7 +55,6 @@ def compute_smoothed_Sigma_from_file(fname_v,
                                      data_grad_col=3,
                                      vmap_ghost_frac=0.5,
                                      vmap_smooth_frac=0.3):
-
     lgrad = lgrad_hi - lgrad_lo
     vmap_smooth_frac_ghost = vmap_smooth_frac / (1 + vmap_ghost_frac * 2)
 
