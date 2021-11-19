@@ -11,7 +11,7 @@
     <OutputPath>.</OutputPath>
     <Name>PY_bandLife</Name>
     <RootNamespace>PY_bandLife</RootNamespace>
-    <InterpreterId>CondaEnv|CondaEnv|pyenv_bandLife</InterpreterId>
+    <InterpreterId>CondaEnv|CondaEnv|pyenv_Bandlife</InterpreterId>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -26,6 +26,7 @@
   </ItemGroup>
   <ItemGroup>
     <InterpreterReference Include="CondaEnv|CondaEnv|pyenv_bandLife" />
+    <InterpreterReference Include="CondaEnv|CondaEnv|pyenv_Bandlife" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in
