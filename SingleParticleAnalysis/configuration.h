@@ -89,15 +89,15 @@ public:
 		return strvec_pair_info;
 	}
 
-	inline double get_xlo() const { return xlo; }//return xhi difined in lammps
-	inline double get_xhi() const { return xhi; }//return xhi difined in lammps
-	inline double get_ylo() const { return ylo; }//return ylo difined in lammps
-	inline double get_yhi() const { return yhi; }//return yhi difined in lammps
-	inline double get_zlo() const { return zlo; }//return zlo difined in lammps
-	inline double get_zhi() const { return zhi; }//return zhi difined in lammps
-	inline double get_xy() const { return xy; }//return xy difined in lammps
-	inline double get_yz() const { return yz; }//return yz difined in lammps
-	inline double get_xz() const { return xz; }//return xz difined in lammps
+	inline double get_xlo() const { return xlo; }//return xhi defined in lammps
+	inline double get_xhi() const { return xhi; }//return xhi defined in lammps
+	inline double get_ylo() const { return ylo; }//return ylo defined in lammps
+	inline double get_yhi() const { return yhi; }//return yhi defined in lammps
+	inline double get_zlo() const { return zlo; }//return zlo defined in lammps
+	inline double get_zhi() const { return zhi; }//return zhi defined in lammps
+	inline double get_xy() const { return xy; }//return xy defined in lammps
+	inline double get_yz() const { return yz; }//return yz defined in lammps
+	inline double get_xz() const { return xz; }//return xz defined in lammps
 
 
 	/*
