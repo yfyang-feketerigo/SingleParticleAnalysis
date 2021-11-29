@@ -1,7 +1,10 @@
 ﻿
 /*****************************************
-20210406 add new pair style: none, for none pair info data file, modify settings to allow adjust pairsytle
-of equi data file & shear data file
+2021-11-19
+a program compute average velocity between two time
+using LAMMPS data file
+settings stored in <PaAn_PerMoment.json>
+CMD parameters: <t0_timestep> <t_timestep> <flag_special_t0>[optional,default = false]
 ******************************************/
 #include "../SingleParticleAnalysis/configuration.h"
 #include "../SingleParticleAnalysis/single_particle_analysis.h"
@@ -17,12 +20,12 @@ int main(int argc, char* argv[])
 	try
 	{
 		bool flag_special_t0 = false;
-		if (argc == 2 && string(argv[1]) == "help")
+		if (argc == 2 && string(argv[1]) == "help") // setting args 
 		{
 			cout << "<./this_programm help> to see this message\n";
 			cout << "excute like this: <./this_programm arg1 arg2 arg3[option]>\n";
-			cout << "arg1: t0 time step\n";
-			cout << "arg2: delta time step\n";
+			cout << "arg1: t0 timestep\n";
+			cout << "arg2: t timestep\n";
 			cout << "arg3: optional, if set to \"flag_special_t0\", flowing parameters in jsonfile will be used:\n";
 			cout << "    \"special_t0Equidata_boxtype\"\n";
 			cout << "    \"special_t0Equidata_pairstyle\"\n";
@@ -35,20 +38,22 @@ int main(int argc, char* argv[])
 		else if (argc == 4)
 		{
 			string str_flag_special_t0(argv[3]);
-			if ("flag_special_t0" == str_flag_special_t0) flag_special_t0 = true;
+			if ("flag_special_t0" == str_flag_special_t0) flag_special_t0 = true; // setting flag_special_t0 according to 3rd arg
 		}
-		string str_timestep_t0(argv[1]);
+		string str_timestep_t0(argv[1]); // 1st arg: timestep_t0
 		size_t timestep_t0 = std::stoll(str_timestep_t0);
-		string str_delta_step(argv[2]);
-		size_t delta_step = std::stoll(str_delta_step);
+
+		string str_step_t(argv[2]); // 2nd arg: timestep
+		size_t timestep_t = std::stoll(str_step_t);
+		//size_t delta_step = std::stoll(str_delta_step);
 
 
 
 
 		std::cout << "timestep settings:\n";
 		std::cout << "t0 timestep: " << timestep_t0 << "\n";
-		std::cout << "delta timstep: " << delta_step << '\n';
-		std::cout << "t timstep: " << delta_step + timestep_t0 << '\n';
+		std::cout << "t timstep: " << timestep_t << '\n';
+		std::cout << "delta timstep: " << timestep_t - timestep_t0 << '\n';
 		std::cout << "\n";
 		std::ios_base::sync_with_stdio(false);
 		std::cin.tie(NULL);
@@ -75,6 +80,7 @@ int main(int argc, char* argv[])
 		string output_path = root["output_path"].asString();
 
 
+		// reading pair settings at timestep t0
 		string str_t0data_pairstyle = root["t0data_pairstyle"].asString();
 		if (flag_special_t0)
 		{
@@ -98,10 +104,11 @@ int main(int argc, char* argv[])
 			throw std::exception(("WRONG pair style: " + str_t0data_pairstyle).c_str());
 		}
 
+		// reading box settings at timestep t0
 		string str_t0data_boxtype = root["t0data_boxtype"].asString();
 		if (flag_special_t0)
 		{
-			str_t0data_pairstyle = root["special_t0Equidata_boxtype"].asString();
+			str_t0data_boxtype = root["special_t0Equidata_boxtype"].asString();
 		}
 		auto t0data_boxsytle = Configuration::BoxType::orthogonal;
 		if (str_t0data_boxtype == "orthogonal")
@@ -114,10 +121,10 @@ int main(int argc, char* argv[])
 		}
 		else
 		{
-			throw std::exception(("WRONG box type: " + str_t0data_boxtype).c_str());
+			throw std::exception(("WRONG t0 box type: " + str_t0data_boxtype).c_str());
 		}
 
-
+		// reading pair settings at timestep t
 		string str_tdata_pairstyle = root["tdata_pairstyle"].asString();
 		Configuration::PairStyle tdata_pairstyle = Configuration::PairStyle::none;
 		if (str_tdata_pairstyle == "single")
@@ -137,24 +144,23 @@ int main(int argc, char* argv[])
 			throw std::exception(("WRONG pair style: " + str_tdata_pairstyle).c_str());
 		}
 
+		// reading box settings at timestep t0
 		string str_tdata_boxtype = root["tdata_boxtype"].asString();
 		auto tdata_boxsytle = Configuration::BoxType::orthogonal;
 		if (str_tdata_boxtype == "orthogonal")
 		{
 			tdata_boxsytle = Configuration::BoxType::orthogonal;
 		}
-		else if (str_t0data_boxtype == "tilt")
+		else if (str_tdata_boxtype == "tilt")
 		{
 			tdata_boxsytle = Configuration::BoxType::tilt;
 		}
 		else
 		{
-			throw std::exception(("WRONG box type: " + str_t0data_boxtype).c_str());
+			throw std::exception(("WRONG t box type: " + str_tdata_boxtype).c_str());
 		}
 
-
-
-
+		// check data files
 		boost::filesystem::path boost_path_check(data_fpath);
 		if (!(boost::filesystem::exists(boost_path_check) && boost::filesystem::is_directory(boost_path_check)))
 		{
@@ -165,6 +171,8 @@ int main(int argc, char* argv[])
 		void mkdir(std::string path);
 		mkdir(output_path);
 
+
+		// compute flag
 		bool flag_computeFlowDisplacement = root["computeFlowDisplacement"].asBool();
 		bool flag_computeFlowAveVelocity = root["computeFlowAveVelocity"].asBool();
 
@@ -183,17 +191,19 @@ int main(int argc, char* argv[])
 			mkdir(flow_ave_velocity_dir);
 		}
 
+
+		//
 		string config_t0_fname = fname_prefix + to_string(timestep_t0) + fname_postfix;
 		Configuration_StaticStructure config_t0
 		(data_fpath + config_t0_fname, t0data_boxsytle, t0data_pairstyle);//Configuration::PairStyle::single);
 
 
-		string str_timestep = to_string(timestep_t0 + delta_step);
+		string str_timestep = to_string(timestep_t);
 		string config_t_fname = fname_prefix + str_timestep + fname_postfix;
 		Configuration_ParticleDynamic config_t
 		(data_fpath + config_t_fname, tdata_boxsytle, tdata_pairstyle);
 
-		if (flag_computeFlowDisplacement)//!计算单粒子流场方向位移，以进一步计算流场问题，可以淘汰之前剪切带程序。
+		if (flag_computeFlowDisplacement)
 		{
 
 			config_t.compute_shear_flow_displacement(config_t0, Configuration_ParticleDynamic::ShearDirection::xy);

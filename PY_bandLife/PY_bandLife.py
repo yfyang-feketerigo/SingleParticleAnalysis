@@ -1,7 +1,9 @@
 import statsmodels.api as smapi
 import numpy as np
 import math
-
+import json
+import os
+import time
 lowess = smapi.nonparametric.lowess
 # 文件路径信息
 set_displacement_path = './{isample}/SingleParticleAnalysis/wi{wi}/FlowDisplacement/'
@@ -10,7 +12,6 @@ set_displacement_opath = './{isample}/SingleParticleAnalysis/wi{wi}/FlowDisplace
 set_velocity_opath = './{isample}/SingleParticleAnalysis/wi{wi}/FlowAveVelocity_correctBox/'
 displacement_prefix = 'FlowDisplacement.'
 velocity_prefix = 'FlowAveVelocity.'
-displacement_oprefix = 'FlowDisplacement_correctBox.'
 velocity_oprefix = 'FlowAveVelocity_correctBox.'
 # 样本起点与终点
 sample_start = 1
@@ -21,12 +22,59 @@ istop = 10
 
 
 def main():
-    wi = 10
+    wi = 100
     tau_alpha = 165000
     gamma_dot = wi / tau_alpha
-    a = compute_smoothed_Sigma_from_file("FlowAveVelocity.3300000", gamma_dot)
-    print(a)
+    JSON_SETTINGS_FNAME = "PaAn_PerMoment.json"
+    # with open(JSON_SETTINGS_FNAME,encoding='utf-8') as fjson
+    root = load_json(JSON_SETTINGS_FNAME)
+    bandlife_savePath = "./"
+    bandlife_fname = "bandlife_wi{}".format(wi)
+    bandlife_file = bandlife_savePath + bandlife_fname
+    output_path = root["output_path"]
+    output_v_prefix = "FlowAveVelocity."
+    start_step = 0
+    delta_step = 6600
+    stop_step = 660000
+    delta_gamma_step = 66000
+    if (stop_step - start_step) % delta_step != 0:
+        raise Exception(
+            'step not match! start_step:{} stop_stp:{} delta_step:{} '.format(
+                start_step, stop_step, delta_step))
+    num_fragments = int((stop_step - start_step) / delta_step - 1)
+    bandlife = np.zeros((num_fragments, 2))
+    if not os.path.exists("./logFiles"):
+        os.makedirs("logFiles")
+    ifrag = 0
+    while True:
+        flowFile = output_path + "FlowAveVelocity/" + output_v_prefix
+        t0_step = ifrag * delta_step + start_step
+        t_step = t0_step + delta_gamma_step
+        if ifrag == 0:
+            os.system(
+                "./SingleParticleFlowPerMoment.exe {} {} flag_special_t0 > ./logFiles/SingleParticleFlowPerMoment.{}_{}_{}.log 2>&1"
+                .format(t0_step, t_step, t0_step, t_step, delta_step))
+        else:
+            os.system(
+                "./SingleParticleFlowPerMoment.exe {} {} > ./logFiles/SingleParticleFlowPerMoment.{}_{}_{}.log 2>&1"
+                .format(t0_step, t_step, t0_step, t_step, delta_step))
+        flowFile = flowFile + "{}".format(t_step)
+        bandlife[ifrag, 0] = t_step
+        bandlife[ifrag,
+                 1] = compute_smoothed_Sigma_from_file(flowFile, gamma_dot)
+        ifrag += 1
+        if t_step >= stop_step:
+            break
+
+    #os.system("rm -rf ./tempFiles")
+    np.savetxt(bandlife_file, bandlife, delimiter=',')
     return
+
+
+def load_json(fname):
+    with open(fname, 'r') as fjson:
+        root = json.load(fjson)
+        return root
 
 
 def compute_smoothed_Sigma_from_file(fname_v,

@@ -168,10 +168,9 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="data_restartFile_wi10\data.restart.DPD.shear.wi10.1069200" />
-    <None Include="data_restartFile_wi10\data.restart.DPD.shear.wi10.13200" />
-    <None Include="data_restartFile_wi10\data.restart.DPD.shear.wi10.528000" />
-    <None Include="data_restartFile_wi10\data.restart.DPD.shear.wi10.59400" />
+    <None Include="data_restartFile_wi10\data.restart.DPD.shear.wi10.2640000" />
+    <None Include="data_restartFile_wi10\data.restart.DPD.shear.wi10.3300000" />
+    <None Include="PaAn_PerMoment.json" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
