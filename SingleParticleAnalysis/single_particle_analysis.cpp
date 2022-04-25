@@ -46,8 +46,8 @@ const CN& Configuration_StaticStructure::get_CN(size_t _id) const
 			return coordination_number[i];
 		}
 	}
-	cerr << "particle " << _id << " cn not found!" << endl;
-	throw (std::exception(("particle " + std::to_string(_id) + " cn not found!").c_str()));
+	//cerr << "particle " << _id << " cn not found!" << endl;
+	throw (std::runtime_error(("particle " + std::to_string(_id) + " cn not found!").c_str()));
 }
 
 void Configuration_StaticStructure::CN_to_file(std::string fname)
@@ -77,7 +77,7 @@ void Configuration_StaticStructure::CN_to_file(std::string fname)
 	else
 	{
 		string warning = "#WARNING: seq of vec_CN and vec_particle not match";
-		std::clog << warning << endl;
+		std::clog << warning << std::endl;
 		para_to_dump(fname, { "cn" }, { _vec_CN }, { warning });
 	}
 	return;
@@ -126,8 +126,8 @@ const MSD& Configuration_ParticleDynamic::get_msd(size_t _id)
 			return msd[i];
 		}
 	}
-	cerr << "particle " << _id << " msd not found!" << endl;
-	throw (std::exception(("particle " + std::to_string(_id) + " msd not found!").c_str()));
+	//cerr << "particle " << _id << " msd not found!" << endl;
+	throw (std::runtime_error(("particle " + std::to_string(_id) + " msd not found!").c_str()));
 }
 
 void Configuration_ParticleDynamic::compute_shear_MSDnonAffine(const Configuration& config_t0, Configuration_ParticleDynamic::ShearDirection shear_direction, double shear_rate, double step_time)
@@ -377,8 +377,8 @@ const MSD& Configuration_ParticleDynamic::get_MSDnonAffine(size_t _id)
 			return msd_nonAffine[i];
 		}
 	}
-	cerr << "particle " << _id << " msd not found!" << endl;
-	throw std::exception(("particle " + std::to_string(_id) + " msd not found!").c_str());
+	//cerr << "particle " << _id << " msd not found!" << endl;
+	throw std::runtime_error(("particle " + std::to_string(_id) + " msd not found!").c_str());
 }
 
 const Flow_deltaDisplacement& Configuration_ParticleDynamic::get_flow_displacement(size_t _id)
@@ -390,8 +390,8 @@ const Flow_deltaDisplacement& Configuration_ParticleDynamic::get_flow_displaceme
 			return flow_delta_displacement[i];
 		}
 	}
-	cerr << "particle " << _id << " flow displacement not found!" << endl;
-	throw std::exception(("particle " + std::to_string(_id) + " flow displacement not found!").c_str());
+	//cerr << "particle " << _id << " flow displacement not found!" << endl;
+	throw std::runtime_error(("particle " + std::to_string(_id) + " flow displacement not found!").c_str());
 }
 
 
@@ -405,8 +405,8 @@ const Flow_Ave_Velocity& Configuration_ParticleDynamic::get_flow_ave_velocity(si
 			return flow_ave_velocity[i];
 		}
 	}
-	cerr << "particle " << _id << " flow ave velocity not found!" << endl;
-	throw std::exception(("particle " + std::to_string(_id) + " flow ave velocity not found!").c_str());
+	//cerr << "particle " << _id << " flow ave velocity not found!" << endl;
+	throw std::runtime_error(("particle " + std::to_string(_id) + " flow ave velocity not found!").c_str());
 }
 
 vector<Particle> Configuration_ParticleDynamic::pick_cross_gradient_boundary_particle(const Configuration& config_t0, ShearDirection shear_direction)
@@ -490,7 +490,7 @@ void Configuration_ParticleDynamic::to_file_MSD(std::string fname)
 	else
 	{
 		string warning = "#WARNING: seq of vec_msd and vec_particle not match";
-		std::clog << warning << endl;
+		std::clog << warning << std::endl;
 		para_to_dump(fname,
 			{ "msd","dx","dy","dz","dx2","dy2","dz2" },
 			{ _vec_msd,_vec_dx,_vec_dy,_vec_dz,_vec_msdx,_vec_msdy,_vec_msdz },
@@ -544,7 +544,7 @@ void Configuration_ParticleDynamic::to_file_nonAffineMSD(std::string fname)
 	else
 	{
 		string warning = "#WARNING: seq of vec_msd_nonAffine and vec_particle not match";
-		std::clog << warning << endl;
+		std::clog << warning << std::endl;
 		para_to_dump(fname,
 			{ "msd_nonAffine","dx","dy","dz","dx2","dy2","dz2" },
 			{ _vec_msd_nonAffine, _vec_nonAffine_dx,_vec_nonAffine_dy,_vec_nonAffine_dz,_vec_msd_nonAffine_x,_vec_msd_nonAffine_y,_vec_msd_nonAffine_z },
@@ -583,7 +583,7 @@ void Configuration_ParticleDynamic::to_file_flow_displacement(std::string fname)
 	else
 	{
 		string warning = "#WARNING: seq of vec_flow_displacement and vec_particle not match";
-		std::clog << warning << endl;
+		std::clog << warning << std::endl;
 		para_to_dump(fname, { "flow_delta_displacement", "grad_box_change" }, { _vec_flow_displacement, _vec_flow_grad_box_change }, { warning,step_info });
 	}
 }
@@ -655,7 +655,7 @@ void Configuration_ParticleDynamic::to_file_flow_ave_velocity(std::string fname)
 	else
 	{
 		string warning = "#WARNING: seq of vec_flow_ave_veclocity and vec_particle not match";
-		std::clog << warning << endl;
+		std::clog << warning << std::endl;
 		para_to_dump(fname, { "flow_ave_velocity" , "grad_box_change" }, { _vec_flow_ave_velocity, _vec_flow_grad_box_change }, { warning });
 	}
 }

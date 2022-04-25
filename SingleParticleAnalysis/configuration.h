@@ -17,6 +17,7 @@
 #include <vector>
 #include <initializer_list>
 #include <algorithm>
+#include <stdexcept>
 
 using std::ofstream;
 using std::clog;
@@ -162,8 +163,8 @@ public:
 				return vec_particle[i];
 			}
 		}
-		std::cerr << "particle " << _id << " not found";
-		throw("particle " + std::to_string(_id) + " not found");
+		//std::cerr << "particle " << _id << " not found";
+		throw std::runtime_error("particle " + std::to_string(_id) + " not found");
 	}
 	inline const vector<Particle>& get_particle() const//return vector of all particles
 	{
@@ -185,8 +186,8 @@ public:
 		ofile.open(fname);
 		if (!ofile.is_open())
 		{
-			cerr << fname << " open failed" << endl;
-			throw (fname + " open failed");
+			//cerr << fname << " open failed" << endl;
+			throw std::runtime_error(fname + " open failed");
 		}
 		for (size_t i = 0; i < comments.size(); i++)
 		{

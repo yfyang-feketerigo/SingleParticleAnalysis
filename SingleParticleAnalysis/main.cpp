@@ -14,6 +14,8 @@ of equi data file & shear data file
 
 int main()
 {
+	using namespace std;
+	using namespace Input;
 	try
 	{
 		std::ios_base::sync_with_stdio(false);
@@ -27,10 +29,30 @@ int main()
 		f_settings.open("PaAn_Settings.json", std::ios_base::binary);
 		if (!f_settings.is_open())
 		{
-			std::cerr << "file \"PaAn_Settings.json\" open failed" << endl;
-			throw "file \"PaAn_Settings.json\" open failed";
+			//std::cerr << "file \"PaAn_Settings.json\" open failed" << endl;
+			throw std::runtime_error("file \"PaAn_Settings.json\" open failed");
 		}
 		f_settings >> root;
+		string str_shear_direction = root["shear_direction"].asString();
+		auto shear_direction = Configuration_ParticleDynamic::ShearDirection::xy;
+		if ("xy" == str_shear_direction)
+		{
+			shear_direction = Configuration_ParticleDynamic::ShearDirection::xy;
+		}
+		else if ("yz" == str_shear_direction)
+		{
+			shear_direction = Configuration_ParticleDynamic::ShearDirection::yz;
+		}
+		else if ("xz" == str_shear_direction)
+		{
+			shear_direction = Configuration_ParticleDynamic::ShearDirection::xz;
+		}
+		else
+		{
+			string err_msg = "illegal shear direction: " + str_shear_direction;
+			throw std::runtime_error(err_msg.c_str());
+		}
+
 		double wi = root["wi"].asDouble();
 		double tau_alpha = root["tau_alpha"].asDouble();
 		double rate = wi / tau_alpha;
@@ -61,8 +83,8 @@ int main()
 		}
 		else
 		{
-			cerr << ("WRONG pair style: " + str_t0data_pairstyle) << endl;
-			throw ("WRONG pair style: " + str_t0data_pairstyle);
+			//cerr << ("WRONG pair style: " + str_t0data_pairstyle) << endl;
+			throw std::runtime_error("WRONG pair style: " + str_t0data_pairstyle);
 		}
 
 		string str_t0data_boxtype = root["t0data_boxtype"].asString();
@@ -78,7 +100,7 @@ int main()
 		else
 		{
 			cerr << ("WRONG box type: " + str_t0data_boxtype) << endl;
-			throw ("WRONG box type: " + str_t0data_boxtype);
+			throw std::runtime_error("WRONG box type: " + str_t0data_boxtype);
 		}
 
 		string str_shear_data_pairstyle = root["shear_data_pairstyle"].asString();
@@ -98,7 +120,7 @@ int main()
 		else
 		{
 			cerr << ("WRONG pair style: " + str_shear_data_pairstyle) << endl;
-			throw ("WRONG pair style: " + str_shear_data_pairstyle);
+			throw std::runtime_error("WRONG pair style: " + str_shear_data_pairstyle);
 		}
 
 
@@ -109,13 +131,13 @@ int main()
 		if (!(boost::filesystem::exists(boost_path_check) && boost::filesystem::is_directory(boost_path_check)))
 		{
 			cerr << "data file path: " << boost_path_check << " not exits" << endl;
-			throw ("data file path: " + boost_path_check.string() + " not exits");
+			throw std::runtime_error("data file path: " + boost_path_check.string() + " not exits");
 		}
 		boost_path_check = boost::filesystem::path(t0data_fpath);
 		if (!(boost::filesystem::exists(boost_path_check) && boost::filesystem::is_directory(boost_path_check)))
 		{
 			cerr << "data file path: " << boost_path_check << " not exits" << endl;
-			throw ("data file path: " + boost_path_check.string() + " not exits");
+			throw std::runtime_error("data file path: " + boost_path_check.string() + " not exits");
 		}
 
 		void mkdir(std::string path);
@@ -201,13 +223,13 @@ int main()
 
 			if (flag_MSDnonAffine)
 			{
-				config_t.compute_shear_MSDnonAffine(config_t0, Configuration_ParticleDynamic::ShearDirection::xy, rate);
+				config_t.compute_shear_MSDnonAffine(config_t0, shear_direction, rate);
 				config_t.to_file_nonAffineMSD(MSDnonAffinedir + "MSDnonAffine." + str_istep);
 			}
 
 			if (flag_MSDnonAffine_t0)
 			{
-				config_t.compute_shear_MSDnonAffine_t0(config_t0, Configuration_ParticleDynamic::ShearDirection::xy, rate);
+				config_t.compute_shear_MSDnonAffine_t0(config_t0, shear_direction, rate);
 				config_t.to_file_nonAffineMSD(MSDnonAffine_t0_dir + "MSDnonAffine_t0." + str_istep);
 			}
 
@@ -225,7 +247,7 @@ int main()
 				{
 					y_ave[i] /= ncounter;
 				}
-				config_t.compute_shear_MSDnonAffine(config_t0, Configuration_ParticleDynamic::ShearDirection::xy, rate, y_ave);
+				config_t.compute_shear_MSDnonAffine(config_t0, shear_direction, rate, y_ave);
 				config_t.to_file_nonAffineMSD(MSDnonAffine_gradient_ave_dir + "MSDnonAffineGrdAve." + str_istep);
 			}
 
@@ -233,11 +255,11 @@ int main()
 			{
 				if (imoment == start_moment)
 				{
-					config_t.compute_shear_flow_displacement(config_t0, Configuration_ParticleDynamic::ShearDirection::xy);
+					config_t.compute_shear_flow_displacement(config_t0, shear_direction);
 				}
 				else
 				{
-					config_t.compute_shear_flow_displacement(config_last_moment, Configuration_ParticleDynamic::ShearDirection::xy);
+					config_t.compute_shear_flow_displacement(config_last_moment, shear_direction);
 				}
 				config_t.to_file_flow_displacement(flow_displacement_dir + "FlowDisplacement." + str_istep);
 			}
@@ -246,11 +268,11 @@ int main()
 			{
 				if (imoment == start_moment)
 				{
-					config_t.compute_shear_flow_ave_velocity(config_t0, Configuration_ParticleDynamic::ShearDirection::xy);
+					config_t.compute_shear_flow_ave_velocity(config_t0, shear_direction);
 				}
 				else
 				{
-					config_t.compute_shear_flow_ave_velocity(config_last_moment, Configuration_ParticleDynamic::ShearDirection::xy);
+					config_t.compute_shear_flow_ave_velocity(config_last_moment, shear_direction);
 				}
 				config_t.to_file_flow_ave_velocity(flow_ave_velocity_dir + "FlowAveVelocity." + str_istep);
 			}

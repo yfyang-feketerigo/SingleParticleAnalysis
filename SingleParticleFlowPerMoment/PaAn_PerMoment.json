@@ -1,5 +1,6 @@
 {
   "_comment": "路径名记得添加 '/'",
+  "shear_direction": "xy",
   "computeFlowAveVelocity": true,
   "computeFlowDisplacement": true,
   "data_fpath": "./data_restartFile_wi10/",
@@ -11,7 +12,7 @@
   "t0data_boxtype": "tilt",
   "t0data_pairstyle": "none",
   "tau_alpha": 425000,
-  "tdata_boxtype": "titl",
+  "tdata_boxtype": "tilt",
   "tdata_pairstyle": "none",
   "wi": 10
 }
