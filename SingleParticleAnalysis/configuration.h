@@ -5,6 +5,7 @@
 /*
 * 用于读取KA模型（纯LJ粒子）体系LAMMPS data文件
 * 同时允许输出单粒子的参量，使用para_to_dump方法
+* 20220825 safely cast double to integer
 */
 #pragma once
 #include "particle.h"
