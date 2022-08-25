@@ -1,6 +1,7 @@
 // 20220825 safely cast double to integer
 #include "configuration.h"
-
+using std::cerr;
+using std::endl;
 Configuration::Configuration(std::string config_file, BoxType _boxtype, PairStyle _pairstyle)
 {
 	clog << "#LAMMPS data file reader..." << '\n';
@@ -9,7 +10,7 @@ Configuration::Configuration(std::string config_file, BoxType _boxtype, PairStyl
 	//timestep = _time;
 	filename = config_file;
 	string firstline;
-	ifstream infile;
+	std::ifstream infile;
 	HEAD_INFO_LINE = 0;
 	infile.open(config_file);
 	if (infile.is_open())
@@ -120,7 +121,7 @@ Configuration::Configuration(std::string config_file, BoxType _boxtype, PairStyl
 	else
 	{
 		cerr << "File " << config_file << " open failed!" << endl;
-		throw std::exception(config_file.c_str());
+		throw std::runtime_error(config_file.c_str());
 	}
 	infile.close();
 
@@ -150,7 +151,7 @@ Configuration::Configuration(std::string config_file, BoxType _boxtype, PairStyl
 	clog << str_atoms_info << '\n';
 	clog << '\n' << "File HEAD LINE: " << HEAD_INFO_LINE << '\n';
 	clog << "File GAP LINE: " << GAP_LINE << '\n';
-	Input in_data(config_file, HEAD_INFO_LINE);
+	Input::Input in_data(config_file, HEAD_INFO_LINE);
 	clog << '\n';
 
 	/*
@@ -202,7 +203,7 @@ size_t Configuration::__add_particle(const Particle& new_pa) //ÐÂÌí¼ÓÒ»¸öÁ£×Ó
 	if (!flag_inbox)
 	{
 		cerr << "new particle coordiantion is not in box!" << endl;
-		throw std::exception("new particle coordiantion is not in box!");
+		throw std::runtime_error("new particle coordiantion is not in box!");
 	}
 	bool flag_oldtype = true;
 	for (size_t i = 0; i < vec_particle.size(); i++)
@@ -225,7 +226,7 @@ void Configuration::to_data(string fname, BoxType _boxtype) //ÒÔlammps dataÎÄ¼þ¸
 	if (!ofile.is_open())
 	{
 		cerr << fname << " open failed" << endl;
-		throw std::exception((fname + " open failed").c_str());
+		throw std::runtime_error((fname + " open failed").c_str());
 	}
 	ofile << "LAMMPS data file via C++, Configuration class, timestep = " << timestep << '\n';
 	ofile << '\n';
@@ -285,7 +286,7 @@ void Configuration::to_dump(string ofname, string opath, string style) const //Ò
 	if (!ofile.is_open())
 	{
 		cerr << full_opath << " open failed" << endl;
-		throw std::exception((full_opath + " open failed").c_str());
+		throw std::runtime_error((full_opath + " open failed").c_str());
 	}
 
 	double lx = xhi - xlo;
@@ -333,6 +334,6 @@ void Configuration::to_dump(string ofname, string opath, string style) const //Ò
 	}
 
 	cerr << "wrong dump style: " << style << '\n';
-	throw std::exception(("wrong dump style: " + style).c_str());
+	throw std::runtime_error(("wrong dump style: " + style).c_str());
 
 }

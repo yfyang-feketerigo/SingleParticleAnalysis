@@ -14,6 +14,7 @@ CMD parameters: <t0_timestep> <t_timestep> <flag_special_t0>[optional,default = 
 #include <json/json.h>
 #include <boost/timer/timer.hpp>
 #include <boost/filesystem.hpp>
+#include <boost/program_options.hpp>
 
 int main(int argc, char* argv[])
 {
@@ -70,6 +71,27 @@ int main(int argc, char* argv[])
 			throw std::exception("file \"PaAn_PerMoment.json\" open failed");
 		}
 		f_settings >> root;
+
+		string str_shear_direction = root["shear_direction"].asString();
+		auto shear_direction = Configuration_ParticleDynamic::ShearDirection::xy;
+		if ("xy" == str_shear_direction)
+		{
+			shear_direction = Configuration_ParticleDynamic::ShearDirection::xy;
+		}
+		else if ("yz" == str_shear_direction)
+		{
+			shear_direction = Configuration_ParticleDynamic::ShearDirection::yz;
+		}
+		else if ("xz" == str_shear_direction)
+		{
+			shear_direction == Configuration_ParticleDynamic::ShearDirection::xz;
+		}
+		else
+		{
+			string err_msg = "illegal shear direction: " + str_shear_direction;
+			throw std::exception(err_msg.c_str());
+		}
+
 		double wi = root["wi"].asDouble();
 		double tau_alpha = root["tau_alpha"].asDouble();
 		double rate = wi / tau_alpha;
@@ -206,14 +228,14 @@ int main(int argc, char* argv[])
 		if (flag_computeFlowDisplacement)
 		{
 
-			config_t.compute_shear_flow_displacement(config_t0, Configuration_ParticleDynamic::ShearDirection::xy);
+			config_t.compute_shear_flow_displacement(config_t0, shear_direction);
 			config_t.to_file_flow_displacement(flow_displacement_dir + "FlowDisplacement." + str_timestep);
 		}
 
 		if (flag_computeFlowAveVelocity)
 		{
 
-			config_t.compute_shear_flow_ave_velocity(config_t0, Configuration_ParticleDynamic::ShearDirection::xy);
+			config_t.compute_shear_flow_ave_velocity(config_t0, shear_direction);
 			config_t.to_file_flow_ave_velocity(flow_ave_velocity_dir + "FlowAveVelocity." + str_timestep);
 		}
 

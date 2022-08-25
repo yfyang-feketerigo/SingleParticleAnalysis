@@ -1,5 +1,6 @@
 {
   "_comment": "路径名记得添加 '/'",
+  "shear_direction": "xy",
   "wi": 10,
   "tau_alpha": 12000,
   "data_fpath": "./",

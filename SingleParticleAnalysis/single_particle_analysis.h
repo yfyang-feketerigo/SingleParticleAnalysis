@@ -6,6 +6,7 @@
 #include <iostream>
 #include <vector>
 #include <cmath>
+#include <stdexcept>
 /*using std::string;
 using std::cout;
 using std::cerr;

@@ -11,7 +11,7 @@ Particle& seek_id(vector<Particle>& vec_p, size_t _id)
 		}
 	}
 	std::cerr << "particle " << _id << "not found!" << std::endl;
-	throw std::exception(("particle " + std::to_string(_id) + " not found!").c_str());
+	throw std::runtime_error(("particle " + std::to_string(_id) + " not found!").c_str());
 
 }
 
